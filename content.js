@@ -6,7 +6,6 @@
 
 var websites = ["https://app.hubspot.com/contacts/*"]
 var nameGraber = [hubspotGraber];
-var elementDisplayer = [hubspotDisplayer]
 
 var config = {
     className: 'vocalizer',
@@ -179,8 +178,9 @@ function hubspotDisplayer(el) {
     return icon;
 }
 
-hubspotGraber();
-
+for (var i = 0; i < nameGraber.length; i++) {
+    nameGraber[i]();
+}
 
 
 $(document).ready(function(){
