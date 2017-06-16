@@ -12,12 +12,14 @@
   "content_scripts": [
     {
       "matches": ["https://app.hubspot.com/contacts/*"],
-      "js": ["jquery.js", "content.js", "livejquery.js"],
+      "js": ["jquery.js", "content.js"],
+      "css": ["vocalizer/vocalizer.css"],
       "run_at": "document_end"
     }
   ],
   "permissions": [
     "activeTab",
-    "https://ajax.googleapis.com/"
+    "https://ajax.googleapis.com/",
+    "storage"
   ]
 }

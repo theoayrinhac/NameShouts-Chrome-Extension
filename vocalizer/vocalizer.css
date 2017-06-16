@@ -1,0 +1,179 @@
+@import "https://fonts.googleapis.com/icon?family=Material+Icons";
+
+.vocalizer-complete {
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	margin: 10px;
+	margin-right: 15px;
+}
+.vocalizer-complete {
+	cursor: pointer;
+	cursor: hand;
+	transition: 0.2s all ease-in;
+	-webkit-transition: 0.2s all ease-in;
+	-o-transition: 0.2s all ease-in;
+	-ms-transition: 0.2s all ease-in;
+}
+.vocalizer-complete:hover {
+	transition: 0.1s all ease-out;
+	-webkit-transition: 0.1s all ease-out;
+	-o-transition: 0.1s all ease-out;
+	-ms-transition: 0.1s all ease-out;
+}
+.vocalizer-complete:active {
+	text-shadow: none;
+}
+.vocalizer-complete:before {
+	font-family: "Material Icons";
+	text-shadow: none;
+	font-size: 0.25em;
+	text-align: center;
+	line-height: 1.8;
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+	content: "\e050";
+	color: #fff;
+	opacity: 0.88;
+	display: block;
+	cursor: pointer;
+	cursor: hand;
+	width: 1.8em;
+	height: 1.75em;
+	border-radius: 99px;
+	padding: 0;
+	border: none;
+	background: center center #25a900 no-repeat;
+	transition: 0.1s background-color ease-out;
+	-webkit-transition: 0.1s background-color ease-out;
+	-o-transition: 0.1s background-color ease-out;
+	-ms-transition: 0.1s background-color ease-out;
+	vertical-align: top;
+	-webkit-appearance: none;
+}
+.vocalizer-complete:hover:before {
+	background-color: #ffc562;
+	opacity: 1;
+	transition: 0.2s all ease-in;
+	-webkit-transition: 0.2s all ease-in;
+	-o-transition: 0.2s all ease-in;
+	-ms-transition: 0.2s all ease-in;
+}
+.vocalizer-complete:active:before {
+	background-color: #25a900;
+}
+.vocalizer-complete:focus:before {
+	outline: none;
+}
+
+
+.vocalizer-partial {
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	margin: 10px;
+	margin-right: 15px;
+}
+.vocalizer-partial {
+	cursor: pointer;
+	cursor: hand;
+	transition: 0.2s all ease-in;
+	-webkit-transition: 0.2s all ease-in;
+	-o-transition: 0.2s all ease-in;
+	-ms-transition: 0.2s all ease-in;
+}
+.vocalizer-partial:hover {
+	transition: 0.1s all ease-out;
+	-webkit-transition: 0.1s all ease-out;
+	-o-transition: 0.1s all ease-out;
+	-ms-transition: 0.1s all ease-out;
+}
+.vocalizer-partial:active {
+	text-shadow: none;
+}
+.vocalizer-partial:before {
+	font-family: "Material Icons";
+	text-shadow: none;
+	font-size: 0.25em;
+	text-align: center;
+	line-height: 1.8;
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+	content: "\e050";
+	color: #fff;
+	opacity: 0.88;
+	display: block;
+	cursor: pointer;
+	cursor: hand;
+	width: 1.8em;
+	height: 1.75em;
+	border-radius: 99px;
+	border: none;
+	background: center center #ccb900 no-repeat;
+	transition: 0.1s background-color ease-out;
+	-webkit-transition: 0.1s background-color ease-out;
+	-o-transition: 0.1s background-color ease-out;
+	-ms-transition: 0.1s background-color ease-out;
+	vertical-align: top;
+	-webkit-appearance: none;
+}
+.vocalizer-partial:hover:before {
+	background-color: #ffc562;
+	opacity: 1;
+	transition: 0.2s all ease-in;
+	-webkit-transition: 0.2s all ease-in;
+	-o-transition: 0.2s all ease-in;
+	-ms-transition: 0.2s all ease-in;
+}
+.vocalizer-partial:active:before {
+	background-color: #ccb900;
+}
+.vocalizer-partial:focus:before {
+	outline: none;
+}
+
+
+.vocalizer-off {
+	display:flex;
+	justify-content:center;
+	align-items:center;
+	margin: 10px;
+	margin-right: 15px;
+}
+
+.vocalizer-off {
+	cursor: pointer;
+	cursor: hand;
+	transition: 0.2s all ease-in;
+	-webkit-transition: 0.2s all ease-in;
+	-o-transition: 0.2s all ease-in;
+	-ms-transition: 0.2s all ease-in;
+}
+
+.vocalizer-off:before {
+	font-family: "Material Icons";
+	text-shadow: none;
+	font-size: 0.25em;
+	text-align: center;
+	line-height: 1.8;
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
+	content: "\e050";
+	color: #fff;
+	opacity: 0.88;
+	display: block;
+	cursor: pointer;
+	cursor: hand;
+	width: 1.8em;
+	height: 1.75em;
+	border-radius: 99px;
+	padding: 0;
+	border: none;
+	background: center center #ccc no-repeat;
+	transition: 0.1s background-color ease-out;
+	-webkit-transition: 0.1s background-color ease-out;
+	-o-transition: 0.1s background-color ease-out;
+	-ms-transition: 0.1s background-color ease-out;
+	vertical-align: top;
+	-webkit-appearance: none;
+}
