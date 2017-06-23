@@ -1,0 +1,26 @@
+<!doctype html>
+
+<html>
+  <head>
+    <title>NameShout Extension</title>
+    <script src="../content/jquery.js" type="text/javascript"></script>
+      <link rel="stylesheet" href="popup_style.css" type="text/css">
+  </head>
+  <body>
+    <div id="header">
+        <a target="_blank" href="https://www.nameshouts.com/"><img src="../img/NSLogo.svg" alt="NameShouts" id="nslogo"></a>
+    </div>
+
+    <div id="get-api">
+        <h2 id="title">API Key for NameShouts</h2>
+        <p>You can get your own api key <a target="_blank" href="https://www.nameshouts.com/developer">there</a></p>
+        <div id="error">
+            <p>This is not valid API key, please enter a valid API key for NameShouts</p>
+        </div>
+        <label>API Key: <input type="text" name="api-key" id="api-key" maxlength="32" placeholder="Enter your API key"></label>
+        <button id="submitkey">Submit</button>
+        <script type="text/javascript" src="popup.js"></script>
+    </div>
+  </body>
+</html>
+

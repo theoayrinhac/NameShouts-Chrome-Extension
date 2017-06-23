@@ -1,0 +1,57 @@
+body {
+    width: 300px;
+    height: 200px;
+}
+
+a {
+    outline: none;
+}
+
+#api-key {
+    width: 235px;
+    font-size: 1.2em;
+    border-radius: 2px;
+    border-color: rgb(183, 183, 183);
+    background-color: #f6f6f6;
+    font-family: 'Alegreya Sans', 'sans-serif';
+    border-width: 2px;
+    padding: 3px;
+}
+
+h2, p {
+    font-family: 'Montserrat',"Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+#nslogo {
+    width: 200px;
+    align-self: center;
+}
+
+#header {
+    height: 50px;
+    width: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 5px;
+
+    background-color: rgba(17,145,168,1);
+    background: -webkit-linear-gradient(left, rgba(17,145,168,1) , rgba(57,207,182,1));
+    background: -o-linear-gradient(right, rgba(17,145,168,1), rgba(57,207,182,1));
+    background: -moz-linear-gradient(right, rgba(17,145,168,1), rgba(57,207,182,1));
+    background: linear-gradient(to right, rgba(17,145,168,1) , rgba(57,207,182,1));
+}
+
+
+#submitkey {
+    margin-top: 20px;
+    align-self: center;
+    justify-content: center;
+    width: 300px;
+    height: 2.5em;
+}
+
+#get-api {
+    margin-bottom: 5px;
+}
