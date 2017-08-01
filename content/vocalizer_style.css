@@ -196,3 +196,160 @@
 	vertical-align: top;
 	-webkit-appearance: none;
 }
+
+.NS {
+	font-family: helvetica, arial, sans-serif;
+	display: flex;
+}
+
+.NS.Wraper {
+	position: relative;
+	height: 1.5em;
+	width: 1.5em;
+	margin: 0;
+	padding: 0;
+	margin-left: 1.5em;
+	margin-bottom: 9%;
+}
+
+.NS.Wraper * {
+	display: flex;
+}
+
+.NS.Wraper .NS.PlayButton {
+	height: 100%;
+	width: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 1;
+}
+
+.NS.Wraper .NS.Information {
+	position: absolute;
+	display: flex;
+	right: -20%;
+	bottom: -20%;
+	height: 60%;
+	width: 60%;
+	z-index: 1;
+}
+
+.NS.Wraper .NS.ContextualInformation {
+	z-index: 100;
+	width: 230px;
+	height: 130px;
+	position: absolute;
+	background: #fafafa;
+	padding: 10px;
+	border-radius: 3px;
+	top: 140%;
+	left: 140%;
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+	display: flex;
+	flex-direction: column;
+}
+
+.NS.ContextualInformation .IconWraper {
+	height: 1.5em;
+	width: 1.5em;
+}
+
+.NS {
+	font-family: "Avenir Next W02",Helvetica,Arial,sans-serif;
+}
+
+.NS.IconWraper {
+	position: absolute;
+	right: 10px;
+	top: 13px;
+	margin-left: 25px;
+}
+
+.NS.Icon {
+	height: 20px !Important;
+	width: 20px !Important;
+}
+
+.NS.Wraper object {
+	height: 100%;
+	width: 100%;
+	pointer-events: none;
+}
+
+p.NS.Pronounciation {
+	margin: 0;
+	color: #0091ae;
+	margin-bottom: 0.5em;
+}
+
+.NS.Footer {
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+}
+
+p.NS.Footer {
+	text-alignment: right;
+	margin: 0;
+	font-size: 0.7em;
+	bottom: 0;
+}
+
+.Information:hover {
+	-webkit-animation: get-bigger .3s linear 1;
+	-moz-animation: get-bigger .3s linear 1;
+	-ms-animation: get-bigger .3s linear 1;
+	right: -40%;
+	bottom: -40%;
+	height: 80%;
+	width: 80%;
+}
+
+.NS h2 {
+	font-size: 1.5em;
+	margin: 0;
+}
+
+@-webkit-keyframes get-bigger {
+	from {
+		right: -20%;
+		bottom: -20%;
+		height: 60%;
+		width: 60%;
+	}
+	to {
+		right: -40%;
+		bottom: -40%;
+		height: 80%;
+		width: 80%;
+	}
+}
+@-moz-keyframes get-bigger {
+	from {
+		right: -20%;
+		bottom: -20%;
+		height: 60%;
+		width: 60%;
+	}
+	to {
+		right: -40%;
+		bottom: -40%;
+		height: 80%;
+		width: 80%;
+	}
+}
+@-ms-keyframes get-bigger {
+	from {
+		right: -20%;
+		bottom: -20%;
+		height: 60%;
+		width: 60%;
+	}
+	to {
+		right: -40%;
+		bottom: -40%;
+		height: 80%;
+		width: 80%;
+	}
+}

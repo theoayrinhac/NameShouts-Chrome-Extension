@@ -11,9 +11,9 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://app.hubspot.com/contacts/*"],
+      "matches": ["https://app.hubspot.com/*/contact/*"],
       "js": ["content/jquery.js", "content/content.js"],
-      "css": ["content/vocalizer_style.css"],
+      "css": ["content/vocalizer_style.css", "content/balloon.css"],
       "run_at": "document_end"
     }
   ],
@@ -21,5 +21,6 @@
     "activeTab",
     "https://ajax.googleapis.com/",
     "storage"
-  ]
+  ],
+  "web_accessible_resources": ["img/NSEar.svg", "img/NSInformation.svg", "img/NSPlayButton.svg"]
 }

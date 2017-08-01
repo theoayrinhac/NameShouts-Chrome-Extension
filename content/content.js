@@ -39,7 +39,9 @@ function getURL(request, headers, cb) {
     xhr.send(null);
 }
 
-function fetchAudio(name, language, cb) {
+
+
+function fetchNSData(name, language, cb) {
     var url = config.nameshouts.queryBase + name;
     chrome.storage.sync.get("APIKey", function(element) {
         getURL(url, {'NS-API-KEY': element["APIKey"]}, function(err, data) {
@@ -52,95 +54,190 @@ function fetchAudio(name, language, cb) {
 
             var names = name.split('-');
             var audioPath = [];
-            var languages = [];
 
-            var languages_list = {};
-
-            console.log(names);
-
-            for (var i = 0; i < names.length; i++) {
-                if (sounds[names[i]] !== null) {
-                    languages.push(sounds[names[i]].map(function (el) {
-                        return el.lang_name.toLowerCase();
-                    }));
-                }
-                else languages.push(0);
-            }
-
-            if (languages.length === 0) {
-                cb(null, [], false);
-            }
-            else {
-                for (var i = 0; i < languages.length; i++) {
-                    for (var j = 0; j < languages[i].length; j++) {
-                        if (languages_list.hasOwnProperty(languages[i][j])) {
-                            languages_list[languages[i][j]] += 1;
-                        }
-                        else languages_list[languages[i][j]] = 1;
-                    }
-                }
-
-                var sorted_languages_list = [];
-                for (var key in languages_list)
-                    if (languages_list.hasOwnProperty(key))
-                        sorted_languages_list.push([key, languages_list[key]]); // each item is an array in format [key, value]
-
-                // sort items by value
-                sorted_languages_list.sort(function (a, b) {
-                    return b[1] - a[1];
-                });
-
-                lang = sorted_languages_list[0][0];
-
-                for (var i = 0; i < names.length; i++) {
-
-                    var index = 0;
-                    var relPath = "";
-
-                    console.log(sounds);
-                    console.log(languages);
-
-                    if (sounds[names[i]] !== null && (index = languages[i].indexOf(lang)) !== -1) {
-                        relPath = sounds[names[i]][index]["path"];
-                    }
-                    else if (sounds[names[i]] !== null) {
-                        relPath = sounds[names[i]][0]["path"];
-                        complete = false
-                    }
-                    else {
-                        complete = false;
-                        continue
-                    }
-                    audioPath.push(config.nameshouts.mediaBase + relPath + '.mp3');
-                }
-
-                cb(null, audioPath, complete);
-            }
-        })});
-
+            cb(null, names, sounds);
+            });});
 }
 
-function addAudioForName(el, audioPath, complete) {
-    if (audioPath.length === 0) {
-        $(el).addClass('vocalizer-off');
-        return;
-    }
-
+function createAudioList(audioPath) {
     var audioList = audioPath.map(function(el) {
         var audio = new Audio(el);
         audio.playbackRate = 0.75;
         return audio;
     });
 
-    el.addEventListener('click', function() {
-        playAudioList(audioList)
-    }, false);
+    return audioList;
+}
 
-    if (complete) {
-        $(el).addClass('vocalizer-complete');
+function parseLanguages(el, names, sounds) {
+
+    console.log(sounds);
+
+    var langAvail = new Array(names.length);
+
+    for (var i = 0; i < names.length; i++) {
+        var array = [];
+        langAvail[i] = array;
     }
+
+    var languages = {};
+    for (var i = 0; i < names.length; i++) {
+        if (sounds[names[i]] != undefined) {
+            for (var j = 0; j < sounds[names[i]].length; j++) {
+                if (sounds[names[i]][j].lang_name in languages) {
+                    languages[sounds[names[i]][j].lang_name] += 1;
+                }
+                else {
+                    languages[sounds[names[i]][j].lang_name] = 1;
+                }
+            }
+        }
+        else {
+            return;
+        }
+    }
+
+    if (languages.length === 0) {
+        return;
+    }
+
+    var keys = Object.keys(languages);
+
+    for (var i = 0; i < keys.length; i++) {
+        langAvail[languages[keys[i]] - 1].push(keys[i]);
+    }
+
+    if (langAvail[langAvail.length - 1].lenght !== 0) {
+        parseInformation(el, names, sounds, langAvail[langAvail.length - 1])
+    }
+}
+
+function parseInformation(el, names, sounds, langAvail) {
+    var data = {};
+    console.log(sounds);
+    for (var i = 0; i < langAvail.length; i++) {
+        var information = {};
+        var phonetic = "";
+        var audioPath = [];
+        var name = ""
+
+        for (var j = 0; j < names.length; j++) {
+            var relPath = "";
+            for (var k=0; k < sounds[names[j]].length; k++) {
+                if (sounds[names[j]][k].lang_name === langAvail[i]) {
+                    phonetic += sounds[names[j]][k].name_phonetic + " ";
+                    relPath = sounds[names[j]][k]["path"];
+                    name += sounds[names[j]][k].name + " ";
+                }
+            }
+            audioPath.push(config.nameshouts.mediaBase + relPath + '.mp3');
+        }
+
+        information["phonetic"] = phonetic;
+        information["audioPath"] = audioPath;
+        information["name"] = name;
+        data[langAvail[i]] = information;
+    }
+
+    console.log("essai");
+
+    createNSIcon(el, data, langAvail);
+}
+
+function createNSIcon(wraper, data, langAvail) {
+
+    var NSPlayButtonURL = chrome.extension.getURL("img/NSPlayButton.svg");
+    var NSInformationButtonURL = chrome.extension.getURL("img/NSInformation.svg");
+    var NSEarIconURL = chrome.extension.getURL("img/NSEar.svg");
+
+    var html = '<div class="NS Button">';
+    html += '<div class="NS PlayButton NSSoundPlay" data-balloon="Hear Pronounciation" data-balloon-pos="up">';
+    html += '<object data="' + NSPlayButtonURL + '" type="image/svg+xml"></object>';
+    html += '</div>';
+    html += '<div class="NS Information" data-balloon="More Information" data-balloon-pos="down">';
+    html += '<object data="' + NSInformationButtonURL + '" type="image/svg+xml"></object>';
+    html += '</div>';
+    html += '</div>';
+    html += '<div class="NS ContextualInformation">';
+    html += '<div class="NS Header">';
+    html += '<h2 id="NSName" class="NS Name">';
+    html +=  data[langAvail[0]].name;
+    html += '</h2>';
+    html += '<div class="NS IconWraper NSSoundPlay" data-balloon="Hear Pronounciation" data-balloon-pos="up">';
+    html += '<object data="' + NSEarIconURL + '" type="image/svg+xml" data-balloon="Hear Pronounciation" data-balloon-pos="up"></object>';
+    html += '</div>';
+    html += '</div>';
+
+    html += '<p class="NS Pronounciation">';
+    html += '<i id="NSPhonetic">' + data[langAvail[0]].phonetic + '</i>';
+    html += '</p>';
+
+    html += '<p class="NS Languages">';
+    html += '<b>Language available:&nbsp</b>';
+    if (langAvail.length === 1) {
+        html += langAvail[0];
+    }
+
     else {
-        $(el).addClass('vocalizer-partial');
+        html += '<select id="NSLangSelect">';
+        for (var i = 0; i < langAvail.length; i++) {
+            html += '<option value="' + langAvail[i] + '">' + langAvail[i] + '</option>';
+        }
+        html += '</select>';
+
+    }
+
+    html += '</p>';
+    html += '<p class="NS Footer">';
+    html += 'Powered by &nbsp<a target="_blank" href="https://www.nameshouts.com">  NameShouts</a>';
+    html += '</p>';
+    html += '</div>';
+
+    console.log(wraper);
+
+    wraper.innerHTML = html;
+
+    if (langAvail.length !== 1) {
+        document.getElementById('NSLangSelect').onchange = function () {
+            var lang = this.value;
+            createLangChangeFct(data)(lang);
+        }
+    }
+
+    $('.NS.ContextualInformation').hide();
+
+    console.log($('.NSSoundPlay'));
+
+    console.log(createAudioList(data[langAvail[0]].audioPath));
+
+    $('.NSSoundPlay').on("click", function() {
+        playAudioList(createAudioList(data[langAvail[0]].audioPath));
+    });
+
+    $('.NS.Information').click(function() {
+        $('.NS.ContextualInformation').toggle()
+    });
+
+    $(document).click(function(e){
+        if ($('.NS.ContextualInformation').is(":visible")) {
+            if($(e.target).closest('.NS.ContextualInformation').length != 0 || $(e.target).closest('.NS.Information').length != 0) return false;
+            $('.NS.ContextualInformation').hide();
+        }
+    });
+
+    $(wraper).show();
+}
+
+function createLangChangeFct(data) {
+    return function (lang) {
+        console.log(data);
+        console.log(lang);
+        $('#NSName').text(data[lang].name);
+        $('#NSPhonetic').text(data[lang].phonetic);
+        $('.NSSoundPlay').off("click");
+        $('.NSSoundPlay').on("click", function() {
+            playAudioList(createAudioList(data[lang].audioPath));
+        });
     }
 }
 
@@ -153,14 +250,16 @@ function playAudioList(audioList) {
     }
 }
 
-function addSound(el) {
-    return function (err, audioPath, complete) {
+function addInformation(el) {
+    return function (err, names, sounds) {
         if (err) {
             return;
         }
-        addAudioForName(el, audioPath, complete);
+        parseLanguages(el, names, sounds);
     };
 }
+
+
 
 for (var i = 0; i < nameGraber.length; i++) {
     nameGraber[i]();
@@ -173,13 +272,17 @@ for (var i = 0; i < nameGraber.length; i++) {
 
     function hubspotGraber() {
         document.addEventListener("DOMSubtreeModified", function(event){
-
             var names = document.getElementsByTagName("h2");
             for (var i = 0, l = names.length; i < l; i++) {
                 if (names[i].hasAttribute("data-onboarding") && names[i].attributes["data-onboarding"].value === "contact-profile-module-title") {
                     if (!hubspotNameAdded) {
 
                         var name = names[i].innerText;
+                        name = name.split('\n')[0];
+
+                        console.log(names[i]);
+                        console.log(name);
+
                         name = removeDiacritics(name);
                         name = name.replace(/-/g, '_');
                         name = name.replace(/ /g, '_');
@@ -187,8 +290,12 @@ for (var i = 0; i < nameGraber.length; i++) {
                         name = name.replace(/_/g, '-');
 
                         hubspotNameAdded = true;
-                        fetchAudio(name, 'default', addSound(hubspotDisplayer(names[i])));
 
+                        var wraper = hubspotDisplayer(names[i]);
+
+                        if (wraper !== undefined) {
+                            fetchNSData(name, 'default', addInformation(wraper));
+                        }
                     }
                 }
             }
@@ -196,14 +303,25 @@ for (var i = 0; i < nameGraber.length; i++) {
     }
 
     function hubspotDisplayer(el) {
-        hubspotHandleModification(el);
 
-        if (el.childNodes[el.childNodes.length - 2].id !== "playButtonVocalizer") {
-            var icon = document.createElement('span');
-            icon.id = "playButtonVocalizer";
-            el.insertBefore(icon, el.children[0]);
-            return icon;
+        if (el.parentElement.parentElement.childNodes[el.parentNode.parentNode.childNodes.length - 1].id !== "NSWraper") {
+            hubspotHandleModification(el);
+            var wraper = document.createElement('div');
+            wraper.id = "NSWraper";
+            wraper.classList = "NS Wraper";
+            el.parentElement.parentElement.appendChild(wraper);
+            $(wraper).hide();
+
+            $(el.childNodes[3]).click(function () {
+                wraper.parentNode.removeChild(wraper);
+            });
+
+            console.log(el.childNodes[3]);
+
+            return wraper
         }
+
+        return undefined;
     }
 
     function hubspotHandleModification(el) {
