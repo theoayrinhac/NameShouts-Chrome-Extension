@@ -1,4 +1,4 @@
-@font-face {
+/*@font-face {
 	font-family: 'Material Icons';
 	font-style: normal;
 	font-weight: 400;
@@ -195,11 +195,12 @@
 	-ms-transition: 0.1s background-color ease-out;
 	vertical-align: top;
 	-webkit-appearance: none;
-}
+}*/
+
+
 
 .NS {
 	font-family: helvetica, arial, sans-serif;
-	display: flex;
 }
 
 .NS.Wraper {
@@ -210,10 +211,6 @@
 	padding: 0;
 	margin-left: 1.5em;
 	margin-bottom: 9%;
-}
-
-.NS.Wraper * {
-	display: flex;
 }
 
 .NS.Wraper .NS.PlayButton {
@@ -237,8 +234,9 @@
 
 .NS.Wraper .NS.ContextualInformation {
 	z-index: 100;
-	width: 230px;
-	height: 130px;
+	min-width: 300px;
+	max-width: 400px;
+	min-height: 150px;
 	position: absolute;
 	background: #fafafa;
 	padding: 10px;
@@ -255,15 +253,40 @@
 	width: 1.5em;
 }
 
+.NS.ContextualInformation .IconWraper:hover {
+	cursor: pointer;
+}
+
 .NS {
 	font-family: "Avenir Next W02",Helvetica,Arial,sans-serif;
+    text-align: left !important;
 }
 
 .NS.IconWraper {
-	position: absolute;
-	right: 10px;
-	top: 13px;
-	margin-left: 25px;
+	margin-left: 1em;
+    margin-top: 0.2em;
+}
+
+.NS.IconWraper.Close {
+    margin: 0;
+    position: absolute;
+    top: 7px;
+    right: 7px;
+    height: 1em;
+    width: 1em;
+}
+
+.NS.IconWraper.Close:hover {
+	cursor: pointer;
+}
+
+div.NS.Header {
+	margin-right: 2em;
+    margin-bottom: 1em;
+}
+
+div.NSFlex {
+    display: flex;
 }
 
 .NS.Icon {
@@ -280,7 +303,6 @@
 p.NS.Pronounciation {
 	margin: 0;
 	color: #0091ae;
-	margin-bottom: 0.5em;
 }
 
 .NS.Footer {
@@ -294,16 +316,59 @@ p.NS.Footer {
 	margin: 0;
 	font-size: 0.7em;
 	bottom: 0;
+    margin-top: 1.5em;
 }
 
-.Information:hover {
-	-webkit-animation: get-bigger .3s linear 1;
-	-moz-animation: get-bigger .3s linear 1;
-	-ms-animation: get-bigger .3s linear 1;
+.NS.Wraper:not(.Bigger):not(.Grey):hover {
+	-webkit-animation: button-get-bigger .3s linear 1;
+	-moz-animation: button-get-bigger .3s linear 1;
+	-ms-animation: button-get-bigger .3s linear 1;
+	cursor: pointer;
+	height: 2em;
+	width: 2em;
+	margin-left: 1em;
+}
+
+.NS.Wraper:not(.Bigger):hover .Information {
+	-webkit-animation: information-get-bigger .3s linear 1;
+	-moz-animation: information-get-bigger .3s linear 1;
+	-ms-animation: information-get-bigger .3s linear 1;
+	cursor: pointer;
 	right: -40%;
 	bottom: -40%;
 	height: 80%;
 	width: 80%;
+}
+
+.NS.Wraper:not(.Bigger):hover .Information.Grey {
+    -webkit-animation: information-get-bigger-grey .3s linear 1;
+    -moz-animation: information-get-bigger-grey .3s linear 1;
+    -ms-animation: information-get-bigger-grey .3s linear 1;
+	cursor: pointer;
+    right: -40%;
+    bottom: -40%;
+    height: 80%;
+    width: 80%;
+}
+
+.NS.Wraper.Bigger {
+    height: 2em;
+    width: 2em;
+    margin-left: 1em;
+}
+
+.NS.Wraper .NS.Information.Bigger {
+    right: -40%;
+    bottom: -40%;
+    height: 80%;
+    width: 80%;
+}
+
+.NS.Wraper .NS.Information.Bigger.Grey {
+    right: -40%;
+    bottom: -40%;
+    height: 80%;
+    width: 80%;
 }
 
 .NS h2 {
@@ -311,7 +376,7 @@ p.NS.Footer {
 	margin: 0;
 }
 
-@-webkit-keyframes get-bigger {
+@-webkit-keyframes information-get-bigger {
 	from {
 		right: -20%;
 		bottom: -20%;
@@ -325,7 +390,7 @@ p.NS.Footer {
 		width: 80%;
 	}
 }
-@-moz-keyframes get-bigger {
+@-moz-keyframes information-get-bigger {
 	from {
 		right: -20%;
 		bottom: -20%;
@@ -339,7 +404,7 @@ p.NS.Footer {
 		width: 80%;
 	}
 }
-@-ms-keyframes get-bigger {
+@-ms-keyframes information-get-bigger {
 	from {
 		right: -20%;
 		bottom: -20%;
@@ -351,5 +416,85 @@ p.NS.Footer {
 		bottom: -40%;
 		height: 80%;
 		width: 80%;
+	}
+}
+
+@-webkit-keyframes information-get-bigger-grey {
+    from {
+        right: -20%;
+        bottom: -20%;
+        height: 60%;
+        width: 60%;
+    }
+    to {
+        right: -40%;
+        bottom: -40%;
+        height: 80%;
+        width: 80%;
+    }
+}
+@-moz-keyframes information-get-bigger-grey {
+    from {
+        right: -20%;
+        bottom: -20%;
+        height: 60%;
+        width: 60%;
+    }
+    to {
+        right: -40%;
+        bottom: -40%;
+        height: 80%;
+        width: 80%;
+    }
+}
+@-ms-keyframes information-get-bigger-grey {
+    from {
+        right: -20%;
+        bottom: -20%;
+        height: 60%;
+        width: 60%;
+    }
+    to {
+        right: -40%;
+        bottom: -40%;
+        height: 80%;
+        width: 80%;
+    }
+}
+
+@-webkit-keyframes button-get-bigger {
+	from {
+		height: 1.5em;
+		width: 1.5em;
+		margin-left: 1.5em;
+	}
+	to {
+		height: 2em;
+		width: 2em;
+		margin-left: 1em;
+	}
+}
+@-moz-keyframes button-get-bigger {
+	from {
+		height: 1.5em;
+		width: 1.5em;
+		margin-left: 1.5em;
+	}
+	to {
+		height: 2em;
+		width: 2em;
+		margin-left: 1em;
+	}
+}
+@-ms-keyframes button-get-bigger {
+	from {
+		height: 1.5em;
+		width: 1.5em;
+		margin-left: 1.5em;
+	}
+	to {
+		height: 2em;
+		width: 2em;
+		margin-left: 1em;
 	}
 }

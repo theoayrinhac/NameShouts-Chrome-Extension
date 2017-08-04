@@ -12,15 +12,27 @@
   "content_scripts": [
     {
       "matches": ["https://app.hubspot.com/*/contact/*"],
-      "js": ["content/jquery.js", "content/content.js"],
-      "css": ["content/vocalizer_style.css", "content/balloon.css"],
-      "run_at": "document_end"
+      "js": ["content/jquery.js", "content/content.js", "content/hubspot/hubspot_content.js"],
+      "css": ["content/vocalizer_style.css", "content/balloon.css"]
+    },
+    {
+      "matches": ["https://www.linkedin.com/in/*"],
+      "js": ["content/jquery.js", "content/content.js", "content/LinkedIn/linkedin_content.js"],
+      "css": ["content/LinkedIn/linkedin_style.css", "content/balloon.css"]
+    },
+    {
+      "matches": ["https://www.nameshouts.com/developer/*"],
+      "js": ["content/jquery.js", "content/notify.min.js", "content/nameshouts/nameshouts.js"],
+      "css": ["content/nameshouts/nameshouts_stylesheet.css"]
     }
   ],
+  "background": {
+    "scripts": ["background/background.js", "content/jquery.js"]
+  },
   "permissions": [
     "activeTab",
     "https://ajax.googleapis.com/",
     "storage"
   ],
-  "web_accessible_resources": ["img/NSEar.svg", "img/NSInformation.svg", "img/NSPlayButton.svg"]
+  "web_accessible_resources": ["img/NSEar.svg", "img/NSInformation.svg", "img/NSPlayButton.svg", "img/NSCross.svg", "img/NSGreyEar.svg", "img/NSGreyEarButton.svg", "img/NSGreyInformation.svg"]
 }

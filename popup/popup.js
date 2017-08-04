@@ -2,7 +2,6 @@ $(document).ready(function() {
     $("#error").hide();
 });
 
-
 function validateForm() {
      var key = document.getElementById("api-key").value;
 
@@ -22,6 +21,8 @@ function validateForm() {
      // Save it using the Chrome extension storage API.
      chrome.storage.sync.set({'APIKey': key}, function () {
          document.form["form"]["api-key"].value = key;
+         apiKey = true;
+         showInfo();
      });
  }
 
@@ -51,7 +52,23 @@ function validateForm() {
      xhr.send(null);
  }
 
- chrome.storage.sync.get("APIKey", function(element) {
-     document.getElementById("api-key").value = element["APIKey"] || "none";
- });
+
+function showInfo() {
+    console.log("essai");
+    chrome.storage.sync.get("APIKey", function(element) {
+        if (!element.hasOwnProperty("APIKey")) {
+            $('#title').hide();
+            $('#first-usage').show();
+            document.getElementById("api-key").value = "";
+        }
+        else {
+            $('#title').show();
+            $('#first-usage').hide();
+            document.getElementById("api-key").value = element["APIKey"];
+        }
+        document.getElementById("api-key").value = element["APIKey"] || "";
+    });
+}
+
+showInfo();
 

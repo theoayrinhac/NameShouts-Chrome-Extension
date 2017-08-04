@@ -1,0 +1,23 @@
+#NSAccountPopUP {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    min-width: 200px;
+    max-width: 280px;
+    min-height: 130px;
+    border: solid 1px rgba(17,145,168,1);
+    border-radius: 4px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
+    padding: 5px;
+    background: white;
+}
+
+#NSAccountPopUP h2 {
+    margin-top: 0;
+    font-size: 1.5em;
+}
+
+
+#NSAccountPopUP p {
+    font-size: 1em;
+}

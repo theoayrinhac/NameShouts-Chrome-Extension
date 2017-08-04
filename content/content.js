@@ -1,8 +1,3 @@
-//Vocalizer
-
-var websites = ["https://app.hubspot.com/contacts/*"];
-var nameGraber = [hubspotGraber];
-
 var config = {
     nameshouts: {
         queryBase: 'https://www.nameshouts.com/api/names/',
@@ -28,8 +23,9 @@ function getURL(request, headers, cb) {
         if (xhr.readyState === 4) {
             if (xhr.status === 200) {
                 cb(null, xhr.responseText);
-            } else {
-                cb(xhr.statusText);
+            }
+            else {
+                cb(xhr.status);
             }
         }
     };
@@ -40,24 +36,31 @@ function getURL(request, headers, cb) {
 }
 
 
-
 function fetchNSData(name, language, cb) {
     var url = config.nameshouts.queryBase + name;
+
     chrome.storage.sync.get("APIKey", function(element) {
-        getURL(url, {'NS-API-KEY': element["APIKey"]}, function(err, data) {
-            if (err) return cb(err);
+        if (element.hasOwnProperty("APIKey")) {
+            getURL(url, {'NS-API-KEY': element["APIKey"]}, function(err, data) {
+                if (err) return cb(err);
 
-            language = language.toLowerCase();
+                language = language.toLowerCase();
 
-            var complete = true;
-            var sounds = JSON.parse(data).message;
+                var complete = true;
+                var sounds = JSON.parse(data).message;
 
-            var names = name.split('-');
-            var audioPath = [];
+                var names = name.split('-');
+                var audioPath = [];
 
-            cb(null, names, sounds);
-            });});
+                cb(null, names, sounds);
+                });
+        }
+        else {
+            cb("NotConfigured");
+        }
+    });
 }
+
 
 function createAudioList(audioPath) {
     var audioList = audioPath.map(function(el) {
@@ -71,7 +74,36 @@ function createAudioList(audioPath) {
 
 function parseLanguages(el, names, sounds) {
 
-    console.log(sounds);
+
+    var languages = {};
+
+    for (var i = 0; i < names.length; i++) {
+
+        var list = {};
+        if (sounds[names[i]] !== undefined) {
+            sounds[names[i]].map(function(el) {
+                list[el.lang_name] = 1;
+            });
+
+            Object.keys(list).map(function(key, index) {
+                if (languages.hasOwnProperty(key)) {
+                    languages[key] += 1;
+                }
+                else {
+                    languages[key] = 1;
+                }
+            });
+        }
+        else {
+            createErrorNSIcon(el, "Name not found", "This name doesn't exist in our database yet", "<p>Please feel free to send a request for this name on our website</p>")
+        }
+    }
+
+    if (languages.length === 0) {
+        createErrorNSIcon(el, "Name not found", "This name doesn't exist in our database yet", "<p>Please feel free to send a request for this name on our website</p>")
+    }
+
+    var keys = Object.keys(languages);
 
     var langAvail = new Array(names.length);
 
@@ -80,41 +112,20 @@ function parseLanguages(el, names, sounds) {
         langAvail[i] = array;
     }
 
-    var languages = {};
-    for (var i = 0; i < names.length; i++) {
-        if (sounds[names[i]] != undefined) {
-            for (var j = 0; j < sounds[names[i]].length; j++) {
-                if (sounds[names[i]][j].lang_name in languages) {
-                    languages[sounds[names[i]][j].lang_name] += 1;
-                }
-                else {
-                    languages[sounds[names[i]][j].lang_name] = 1;
-                }
-            }
-        }
-        else {
-            return;
-        }
-    }
-
-    if (languages.length === 0) {
-        return;
-    }
-
-    var keys = Object.keys(languages);
-
     for (var i = 0; i < keys.length; i++) {
         langAvail[languages[keys[i]] - 1].push(keys[i]);
     }
 
-    if (langAvail[langAvail.length - 1].lenght !== 0) {
+    if (langAvail[langAvail.length - 1].length !== 0) {
         parseInformation(el, names, sounds, langAvail[langAvail.length - 1])
+    }
+    else {
+        createErrorNSIcon(el, "Name not found", "This name doesn't exist in our database yet", "<p>Please feel free to send a request for this name on our website</p>")
     }
 }
 
 function parseInformation(el, names, sounds, langAvail) {
     var data = {};
-    console.log(sounds);
     for (var i = 0; i < langAvail.length; i++) {
         var information = {};
         var phonetic = "";
@@ -128,6 +139,7 @@ function parseInformation(el, names, sounds, langAvail) {
                     phonetic += sounds[names[j]][k].name_phonetic + " ";
                     relPath = sounds[names[j]][k]["path"];
                     name += sounds[names[j]][k].name + " ";
+                    break;
                 }
             }
             audioPath.push(config.nameshouts.mediaBase + relPath + '.mp3');
@@ -139,9 +151,73 @@ function parseInformation(el, names, sounds, langAvail) {
         data[langAvail[i]] = information;
     }
 
-    console.log("essai");
-
     createNSIcon(el, data, langAvail);
+}
+
+function createErrorNSIcon(wraper, context, title, text) {
+
+    var NSPlayButtonURL = chrome.extension.getURL("img/NSGreyEarButton.svg");
+    var NSInformationButtonURL = chrome.extension.getURL("img/NSGreyInformation.svg");
+    var NSCrossURL = chrome.extension.getURL("img/NSCross.svg");
+
+
+    var html = '<div class="NS Button">';
+    html += '<div class="NS PlayButton NSSoundPlay" data-balloon="' + context + '" data-balloon-pos="up">';
+    html += '<object data="' + NSPlayButtonURL + '" type="image/svg+xml"></object>';
+    html += '</div>';
+    html += '<div class="NS Information Grey" data-balloon="More Information" data-balloon-pos="down">';
+    html += '<object data="' + NSInformationButtonURL + '" type="image/svg+xml"></object>';
+    html += '</div>';
+    html += '</div>';
+    html += '<div class="NS ContextualInformation">';
+    html += '<div class="NS IconWraper Close" id="NSClose">';
+    html += '<object data="' + NSCrossURL + '" type="image/svg+xml" data-balloon="Hear Pronounciation" data-balloon-pos="up"></object>';
+    html += '</div>';
+    html += '<div class="NS Header">';
+    html += '<h2 id="NSName" class="NS Name">';
+    html +=  title
+    html += '</h2>';
+    html += '</div>';
+    html += '<div class="NSBody">';
+    html += text;
+    html += '</div>';
+    html += '<p class="NS Footer">';
+    html += 'Powered by &nbsp<a id="NSLink" href="https://www.nameshouts.com">  NameShouts</a>';
+    html += '</p>';
+    html += '</div>';
+
+
+    wraper.innerHTML = html;
+
+
+    $('.NS.ContextualInformation').hide();
+
+    $('.NS.Information').click(function() {
+        $('.NS.ContextualInformation').toggle();
+        $('.NS.Information').toggleClass("Bigger");
+    });
+
+    $(document).click(function(e){
+        if ($('.NS.ContextualInformation').is(":visible")) {
+            if($(e.target).closest('.NS.ContextualInformation').length != 0 || $(e.target).closest('.NS.Information').length != 0) return false;
+            $('.NS.ContextualInformation').hide();
+            $('.NS.Information').removeClass("Bigger");
+        }
+    });
+
+    $('#NSClose').click(function() {
+        $('.NS.ContextualInformation').hide();
+        $('.NS.Information').removeClass("Bigger");
+    });
+
+    $('#NSLink').click(function(){
+        window.open($(this).attr('href'), '_blank');
+
+        return false;
+    });
+
+    $(wraper).addClass("Grey");
+    $(wraper).show();
 }
 
 function createNSIcon(wraper, data, langAvail) {
@@ -149,6 +225,8 @@ function createNSIcon(wraper, data, langAvail) {
     var NSPlayButtonURL = chrome.extension.getURL("img/NSPlayButton.svg");
     var NSInformationButtonURL = chrome.extension.getURL("img/NSInformation.svg");
     var NSEarIconURL = chrome.extension.getURL("img/NSEar.svg");
+    var NSCrossURL = chrome.extension.getURL("img/NSCross.svg");
+
 
     var html = '<div class="NS Button">';
     html += '<div class="NS PlayButton NSSoundPlay" data-balloon="Hear Pronounciation" data-balloon-pos="up">';
@@ -159,7 +237,11 @@ function createNSIcon(wraper, data, langAvail) {
     html += '</div>';
     html += '</div>';
     html += '<div class="NS ContextualInformation">';
+    html += '<div class="NS IconWraper Close" id="NSClose">';
+    html += '<object data="' + NSCrossURL + '" type="image/svg+xml" data-balloon="Hear Pronounciation" data-balloon-pos="up"></object>';
+    html += '</div>';
     html += '<div class="NS Header">';
+    html += '<div class="NSFlex">';
     html += '<h2 id="NSName" class="NS Name">';
     html +=  data[langAvail[0]].name;
     html += '</h2>';
@@ -167,11 +249,12 @@ function createNSIcon(wraper, data, langAvail) {
     html += '<object data="' + NSEarIconURL + '" type="image/svg+xml" data-balloon="Hear Pronounciation" data-balloon-pos="up"></object>';
     html += '</div>';
     html += '</div>';
-
+    html += '<div class="NSFlex">';
     html += '<p class="NS Pronounciation">';
     html += '<i id="NSPhonetic">' + data[langAvail[0]].phonetic + '</i>';
     html += '</p>';
-
+    html += '</div>';
+    html += '</div>';
     html += '<p class="NS Languages">';
     html += '<b>Language available:&nbsp</b>';
     if (langAvail.length === 1) {
@@ -189,11 +272,10 @@ function createNSIcon(wraper, data, langAvail) {
 
     html += '</p>';
     html += '<p class="NS Footer">';
-    html += 'Powered by &nbsp<a target="_blank" href="https://www.nameshouts.com">  NameShouts</a>';
+    html += 'Powered by &nbsp<a id="NSLink" href="https://www.nameshouts.com">  NameShouts</a>';
     html += '</p>';
     html += '</div>';
 
-    console.log(wraper);
 
     wraper.innerHTML = html;
 
@@ -206,23 +288,35 @@ function createNSIcon(wraper, data, langAvail) {
 
     $('.NS.ContextualInformation').hide();
 
-    console.log($('.NSSoundPlay'));
-
-    console.log(createAudioList(data[langAvail[0]].audioPath));
-
     $('.NSSoundPlay').on("click", function() {
         playAudioList(createAudioList(data[langAvail[0]].audioPath));
     });
 
     $('.NS.Information').click(function() {
-        $('.NS.ContextualInformation').toggle()
+        $('.NS.ContextualInformation').toggle();
+        $('.NS.Wraper').toggleClass("Bigger");
+        $('.NS.Information').toggleClass("Bigger");
     });
 
     $(document).click(function(e){
         if ($('.NS.ContextualInformation').is(":visible")) {
             if($(e.target).closest('.NS.ContextualInformation').length != 0 || $(e.target).closest('.NS.Information').length != 0) return false;
             $('.NS.ContextualInformation').hide();
+            $('.NS.Wraper').removeClass("Bigger");
+            $('.NS.Information').removeClass("Bigger");
         }
+    });
+
+    $('#NSClose').click(function() {
+        $('.NS.ContextualInformation').hide();
+        $('.NS.Wraper').removeClass("Bigger");
+        $('.NS.Information').removeClass("Bigger");
+    });
+
+    $('#NSLink').click(function(){
+        window.open($(this).attr('href'), '_blank');
+
+        return false;
     });
 
     $(wraper).show();
@@ -230,8 +324,6 @@ function createNSIcon(wraper, data, langAvail) {
 
 function createLangChangeFct(data) {
     return function (lang) {
-        console.log(data);
-        console.log(lang);
         $('#NSName').text(data[lang].name);
         $('#NSPhonetic').text(data[lang].phonetic);
         $('.NSSoundPlay').off("click");
@@ -252,93 +344,29 @@ function playAudioList(audioList) {
 
 function addInformation(el) {
     return function (err, names, sounds) {
-        if (err) {
+        if(err) {
+            $(el).toggleClass("Grey");
+            if (err === 401) {
+                cb();
+                createErrorNSIcon(el, "You reached the limits of your free account", "Free Account Limits", "<p>You have a free account, and you reached the limit of it</p>")
+            }
+            else if (err === 403) {
+                createErrorNSIcon(el, "You have a wrong API Key", "Wrong API Key", "<p>You have an incorrect API Key, if you have a NameShouts account, you can generate a new one <a id='NSLink' href='https://www.nameshouts.com/developer/'> there</a> <br/>  Or you can create an account <a href='https://www.nameshouts.com/user/sign-up'> there</a></p>")
+            }
+            else if (err === "NotConfigured") {
+                createErrorNSIcon(el, "You didn't configure your API Key", "Incomplete Configuration", "<p>You didn't set up an API Key yet, if you already have a NameShouts account, you can generate an API key <a id='NSLink' href='https://www.nameshouts.com/developer/'> there</a> <br/>  Or you can create an account <a href='https://www.nameshouts.com/user/sign-up'> there</a></p>")
+            }
+            else if (err) {
+                console.log(err)
+                createErrorNSIcon(el, "Unknown Error", "An unknown error occured", "<p>Please contact us to solve this issue if it happens again</p>")
+            }
             return;
         }
+
         parseLanguages(el, names, sounds);
     };
 }
 
-
-
-for (var i = 0; i < nameGraber.length; i++) {
-    nameGraber[i]();
-}
-
-//Specific Functions
-
-    //HubSpot
-    var hubspotNameAdded = false;
-
-    function hubspotGraber() {
-        document.addEventListener("DOMSubtreeModified", function(event){
-            var names = document.getElementsByTagName("h2");
-            for (var i = 0, l = names.length; i < l; i++) {
-                if (names[i].hasAttribute("data-onboarding") && names[i].attributes["data-onboarding"].value === "contact-profile-module-title") {
-                    if (!hubspotNameAdded) {
-
-                        var name = names[i].innerText;
-                        name = name.split('\n')[0];
-
-                        console.log(names[i]);
-                        console.log(name);
-
-                        name = removeDiacritics(name);
-                        name = name.replace(/-/g, '_');
-                        name = name.replace(/ /g, '_');
-                        name = name.replace(/\W/g,'');
-                        name = name.replace(/_/g, '-');
-
-                        hubspotNameAdded = true;
-
-                        var wraper = hubspotDisplayer(names[i]);
-
-                        if (wraper !== undefined) {
-                            fetchNSData(name, 'default', addInformation(wraper));
-                        }
-                    }
-                }
-            }
-        });
-    }
-
-    function hubspotDisplayer(el) {
-
-        if (el.parentElement.parentElement.childNodes[el.parentNode.parentNode.childNodes.length - 1].id !== "NSWraper") {
-            hubspotHandleModification(el);
-            var wraper = document.createElement('div');
-            wraper.id = "NSWraper";
-            wraper.classList = "NS Wraper";
-            el.parentElement.parentElement.appendChild(wraper);
-            $(wraper).hide();
-
-            $(el.childNodes[3]).click(function () {
-                wraper.parentNode.removeChild(wraper);
-            });
-
-            console.log(el.childNodes[3]);
-
-            return wraper
-        }
-
-        return undefined;
-    }
-
-    function hubspotHandleModification(el) {
-        var observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-                hubspotNameAdded = false;
-            });
-        });
-
-        var config = { attributes: true, childList: true, characterData: true };
-
-        observer.observe(el.parentNode, config);
-
-        window.addEventListener('popstate', function(event) {
-           hubspotNameAdded = false;
-        });
-    }
 
 // Replace accents function
 function removeDiacritics (str) {
