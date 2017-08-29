@@ -2,8 +2,11 @@
   "manifest_version": 2,
 
   "name": "NameShouts Chrome Extension",
-  "description": "This extension uses the NameShouts API to includ name pronunciation for HubSpot",
-  "version": "1.0",
+  "description": "NameShouts is the easiest tool to learn proper pronunciation of names, just a click away with LinkedIn and Hubspot",
+  "version": "1.01",
+  "icons": {
+    "128": "img/icon.png"
+  },
 
   "browser_action": {
     "default_icon": "img/icon.png",
@@ -11,14 +14,19 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://app.hubspot.com/*/contact/*"],
+      "matches": ["https://app.hubspot.com/*"],
       "js": ["content/jquery.js", "content/content.js", "content/hubspot/hubspot_content.js"],
       "css": ["content/vocalizer_style.css", "content/balloon.css"]
     },
     {
-      "matches": ["https://www.linkedin.com/in/*"],
+      "matches": ["https://www.linkedin.com/*"],
       "js": ["content/jquery.js", "content/content.js", "content/LinkedIn/linkedin_content.js"],
       "css": ["content/LinkedIn/linkedin_style.css", "content/balloon.css"]
+    },
+    {
+      "matches": ["https://www.facebook.com/*"],
+      "js": ["content/jquery.js", "content/content.js", "content/Facebook/facebook_content.js"],
+      "css": ["content/Facebook/facebook_style.css", "content/balloon.css"]
     },
     {
       "matches": ["https://www.nameshouts.com/developer/*"],

@@ -78,9 +78,9 @@ function parseLanguages(el, names, sounds) {
     var languages = {};
 
     for (var i = 0; i < names.length; i++) {
-
         var list = {};
-        if (sounds[names[i]] !== undefined) {
+
+        if ((sounds[names[i]] !== undefined) && (sounds[names[i]] !== null)) {
             sounds[names[i]].map(function(el) {
                 list[el.lang_name] = 1;
             });
@@ -94,13 +94,11 @@ function parseLanguages(el, names, sounds) {
                 }
             });
         }
-        else {
-            createErrorNSIcon(el, "Name not found", "This name doesn't exist in our database yet", "<p>Please feel free to send a request for this name on our website</p>")
-        }
     }
 
     if (languages.length === 0) {
-        createErrorNSIcon(el, "Name not found", "This name doesn't exist in our database yet", "<p>Please feel free to send a request for this name on our website</p>")
+        createErrorNSIcon(el, "Name not found", "This name doesn't exist in our database yet", "<p>Please feel free to send a request for this ame on our website</p>")
+        return
     }
 
     var keys = Object.keys(languages);
@@ -116,42 +114,59 @@ function parseLanguages(el, names, sounds) {
         langAvail[languages[keys[i]] - 1].push(keys[i]);
     }
 
-    if (langAvail[langAvail.length - 1].length !== 0) {
-        parseInformation(el, names, sounds, langAvail[langAvail.length - 1])
-    }
-    else {
-        createErrorNSIcon(el, "Name not found", "This name doesn't exist in our database yet", "<p>Please feel free to send a request for this name on our website</p>")
-    }
+    parseInformation(el, names, sounds, langAvail)
 }
 
 function parseInformation(el, names, sounds, langAvail) {
     var data = {};
-    for (var i = 0; i < langAvail.length; i++) {
-        var information = {};
-        var phonetic = "";
-        var audioPath = [];
-        var name = ""
+    var complete = false;
 
-        for (var j = 0; j < names.length; j++) {
-            var relPath = "";
-            for (var k=0; k < sounds[names[j]].length; k++) {
-                if (sounds[names[j]][k].lang_name === langAvail[i]) {
-                    phonetic += sounds[names[j]][k].name_phonetic + " ";
-                    relPath = sounds[names[j]][k]["path"];
-                    name += sounds[names[j]][k].name + " ";
-                    break;
+    console.log(sounds);
+
+    for (var k = 0; k < langAvail.length; k++) {
+        for (var i = 0; i < langAvail[k].length; i++) {
+            var information = {};
+            var phonetic = "";
+            var audioPath = [];
+            var name = "";
+            var pattern = [];
+
+            for (var j = 0; j < names.length; j++) {
+                var relPath = "";
+                pattern[j]=false;
+
+                if (sounds[names[j]] !== null) {
+                    for (var l = 0; l < sounds[names[j]].length; l++) {
+
+                        if (sounds[names[j]][l].lang_name === langAvail[k][i]) {
+                            phonetic += sounds[names[j]][l].name_phonetic + " ";
+                            relPath = sounds[names[j]][l]["path"];
+                            name += sounds[names[j]][l].name + " ";
+                            pattern[j] = true;
+                            break;
+                        }
+
+                        if (!complete && k === names.length - 1) {
+                            complete = true;
+                        }
+                    }
+                    audioPath.push(config.nameshouts.mediaBase + relPath + '.mp3');
                 }
             }
-            audioPath.push(config.nameshouts.mediaBase + relPath + '.mp3');
-        }
 
-        information["phonetic"] = phonetic;
-        information["audioPath"] = audioPath;
-        information["name"] = name;
-        data[langAvail[i]] = information;
+            information["phonetic"] = phonetic;
+            information["audioPath"] = audioPath;
+            information["name"] = name;
+            information["completeness"] = j;
+            information["pattern"] = pattern;
+            data[langAvail[k][i]] = information;
+        }
     }
 
-    createNSIcon(el, data, langAvail);
+    console.log(data);
+    console.log(langAvail);
+
+    createNSIcon(el, data, langAvail, complete);
 }
 
 function createErrorNSIcon(wraper, context, title, text) {
@@ -220,19 +235,31 @@ function createErrorNSIcon(wraper, context, title, text) {
     $(wraper).show();
 }
 
-function createNSIcon(wraper, data, langAvail) {
+function createNSIcon(wraper, data, langAvail, complete) {
 
     var NSPlayButtonURL = chrome.extension.getURL("img/NSPlayButton.svg");
     var NSInformationButtonURL = chrome.extension.getURL("img/NSInformation.svg");
     var NSEarIconURL = chrome.extension.getURL("img/NSEar.svg");
     var NSCrossURL = chrome.extension.getURL("img/NSCross.svg");
 
+    var lang = undefined;
+    var i = langAvail.length - 1;
+
+    while (lang === undefined || i > 0) {
+        console.log(langAvail[i]);
+        if (langAvail[i].length !== 0) {
+            lang = langAvail[i][0];
+        }
+        i--
+    }
+
+    console.log(lang);
 
     var html = '<div class="NS Button">';
     html += '<div class="NS PlayButton NSSoundPlay" data-balloon="Hear Pronounciation" data-balloon-pos="up">';
     html += '<object data="' + NSPlayButtonURL + '" type="image/svg+xml"></object>';
     html += '</div>';
-    html += '<div class="NS Information" data-balloon="More Information" data-balloon-pos="down">';
+    html += '<div class="NS Information" data-balloon="More Information" data-balloon-pos="up">';
     html += '<object data="' + NSInformationButtonURL + '" type="image/svg+xml"></object>';
     html += '</div>';
     html += '</div>';
@@ -243,7 +270,7 @@ function createNSIcon(wraper, data, langAvail) {
     html += '<div class="NS Header">';
     html += '<div class="NSFlex">';
     html += '<h2 id="NSName" class="NS Name">';
-    html +=  data[langAvail[0]].name;
+    html +=  data[lang].name;
     html += '</h2>';
     html += '<div class="NS IconWraper NSSoundPlay" data-balloon="Hear Pronounciation" data-balloon-pos="up">';
     html += '<object data="' + NSEarIconURL + '" type="image/svg+xml" data-balloon="Hear Pronounciation" data-balloon-pos="up"></object>';
@@ -251,20 +278,33 @@ function createNSIcon(wraper, data, langAvail) {
     html += '</div>';
     html += '<div class="NSFlex">';
     html += '<p class="NS Pronounciation">';
-    html += '<i id="NSPhonetic">' + data[langAvail[0]].phonetic + '</i>';
+    html += '<i id="NSPhonetic">' + data[lang].phonetic + '</i>';
     html += '</p>';
     html += '</div>';
     html += '</div>';
     html += '<p class="NS Languages">';
     html += '<b>Language available:&nbsp</b>';
-    if (langAvail.length === 1) {
-        html += langAvail[0];
-    }
 
-    else {
+    console.log(langAvail);
+    if (langAvail.length === 1) {
+        html += langAvail[langAvail.length - 1][0];
+    } else {
         html += '<select id="NSLangSelect">';
-        for (var i = 0; i < langAvail.length; i++) {
-            html += '<option value="' + langAvail[i] + '">' + langAvail[i] + '</option>';
+        if (complete) {
+            for (var j = 0; j < langAvail[langAvail.length - 1].length; j++) {
+                html += '<option value="' + langAvail[langAvail.length - 1][j] + '">' + langAvail[langAvail.length - 1][j] + '</option>';
+            }
+        }
+        else {
+            for (var i = (langAvail.length - 1); i >= 0; i--) {
+                if (langAvail[i].length !== 0) {
+                    html += '<optgroup label="' + (i + 1) + ' words">';
+                    for (var j = 0; j < langAvail[i].length; j++) {
+                        html += '<option value="' + langAvail[i][j] + '">' + langAvail[i][j] + '</option>';
+                    }
+                    html += '</optgroup>';
+                }
+            }
         }
         html += '</select>';
 
@@ -357,7 +397,7 @@ function addInformation(el) {
                 createErrorNSIcon(el, "You didn't configure your API Key", "Incomplete Configuration", "<p>You didn't set up an API Key yet, if you already have a NameShouts account, you can generate an API key <a id='NSLink' href='https://www.nameshouts.com/developer/'> there</a> <br/>  Or you can create an account <a href='https://www.nameshouts.com/user/sign-up'> there</a></p>")
             }
             else if (err) {
-                console.log(err)
+                console.log(err);
                 createErrorNSIcon(el, "Unknown Error", "An unknown error occured", "<p>Please contact us to solve this issue if it happens again</p>")
             }
             return;

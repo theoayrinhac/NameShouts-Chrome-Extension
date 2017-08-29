@@ -2,25 +2,28 @@
  * Created by theophile on 02/08/2017.
  */
 
+console.log('loaded');
 
-var linkedinNameAdded = false;
+var faceboookNameAdded = false;
 var name = "";
 
 function linkedInGraber() {
     document.addEventListener("DOMSubtreeModified", function(event){
-        if ($('.pv-top-card-section__name').length) {
+        var element = $('#fb-timeline-cover-name');
 
-            var text = $('.pv-top-card-section__name').text();
+        if (element.length) {
+
+            var text = element.text();
             if (text === "") {
                 return;
             }
 
             if (name !== text) {
                 name = text;
-                linkedinNameAdded = false;
+                faceboookNameAdded = false;
             }
 
-            if (!linkedinNameAdded || name !== text) {
+            if (!faceboookNameAdded || name !== text) {
 
                 name = text;
 
@@ -30,11 +33,12 @@ function linkedInGraber() {
                 text = text.replace(/\W/g,'');
                 text = text.replace(/_/g, '-');
 
-                linkedinNameAdded = true;
+                faceboookNameAdded = true;
 
                 var wraper = linkedInDisplayer();
 
                 if (wraper !== undefined) {
+                    console.log("adding icon");
                     fetchNSData(text, 'default', addInformation(wraper));
                 }
             }
@@ -52,21 +56,22 @@ function linkedInDisplayer() {
     var wraper = document.createElement('div');
     wraper.id = "NSWraper";
     wraper.classList = "NS Wraper";
-    $(wraper).insertAfter('.pv-top-card-section__name');
+
+    var div = $('#fb-timeline-cover-name').parent().parent();
+    console.log(div);
+    $(wraper).insertAfter(div);
+    div.parent().css("display", "flex");
+
     $(wraper).hide();
 
-    $('.pv-top-card-section__name').css("display", "inline-block");
-    $('.pv-top-card-section__name').css("margin-left", "2.5em");
-    $('.pv-top-card-section__name').css("line-height", "2em");
 
-    return wraper
 
-    return undefined;
+    return wraper;
 }
 
 function linkedInModificationHandler() {
     window.addEventListener('popstate', function (event) {
-        linkedinNameAdded = false;
+        faceboookNameAdded = false;
     });
 }
 
