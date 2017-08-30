@@ -1,6 +1,6 @@
 # NameShouts Extension
 
-NameShouts is the easiest tool to learn proper pronunciation of names, just a click away! Currently supported on Hubspot, LinkedIn and Facebook
+NameShouts is the easiest tool to learn proper pronunciation of names, just a click away! Currently supported on Hubspot, LinkedIn, Facebook and AngelList.
 
 ## [NameShouts](https://www.nameshouts.com)
 

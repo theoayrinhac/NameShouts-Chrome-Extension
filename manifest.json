@@ -2,7 +2,7 @@
   "manifest_version": 2,
 
   "name": "NameShouts Chrome Extension",
-  "description": "NameShouts is the easiest tool to learn proper pronunciation of names, just a click away with Facebook, LinkedIn and Hubspot",
+  "description": "NameShouts is the easiest tool to learn proper pronunciation of names, just a click away ! Currently supported on Hubspot, LinkedIn, Facebook and AngelList.",
   "version": "1.0.1",
   "icons": {
     "128": "img/icon.png"
@@ -22,6 +22,11 @@
       "matches": ["https://www.linkedin.com/*"],
       "js": ["content/jquery.js", "content/content.js", "content/LinkedIn/linkedin_content.js"],
       "css": ["content/LinkedIn/linkedin_style.css", "content/balloon.css"]
+    },
+    {
+      "matches": ["https://angel.co/*"],
+      "js": ["content/jquery.js", "content/content.js", "content/AngelList/angellist_content.js"],
+      "css": ["content/AngelList/angellist_style.css", "content/balloon.css"]
     },
     {
       "matches": ["https://www.facebook.com/*"],

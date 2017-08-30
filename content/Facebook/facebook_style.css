@@ -129,8 +129,9 @@ p.NS.Footer {
 	-moz-animation: button-get-bigger .3s linear 1;
 	-ms-animation: button-get-bigger .3s linear 1;
 	cursor: pointer;
-	height: 2em;
-	width: 2em;
+	height: 30px;
+	width: 30px;
+	margin-top: 0px;
 }
 
 .NS.Wraper:not(.Bigger):hover .Information {
