@@ -65,7 +65,7 @@ function fetchNSData(name, language, cb) {
 function createAudioList(audioPath) {
     var audioList = audioPath.map(function(el) {
         var audio = new Audio(el);
-        audio.playbackRate = 0.75;
+        audio.playbackRate = 0.9;
         return audio;
     });
 

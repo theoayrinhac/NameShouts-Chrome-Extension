@@ -2,8 +2,8 @@
   "manifest_version": 2,
 
   "name": "NameShouts Chrome Extension",
-  "description": "NameShouts is the easiest tool to learn proper pronunciation of names, just a click away with LinkedIn and Hubspot",
-  "version": "1.01",
+  "description": "NameShouts is the easiest tool to learn proper pronunciation of names, just a click away with Facebook, LinkedIn and Hubspot",
+  "version": "1.0.1",
   "icons": {
     "128": "img/icon.png"
   },
