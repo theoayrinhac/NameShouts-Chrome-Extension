@@ -30,7 +30,9 @@ function angelGraber() {
                     console.log(name);
 
                     if (wraper !== undefined) {
+                        trackOrigin('AngelList');
                         fetchNSData(name, 'default', addInformation(wraper));
+
                     }
                 }
             }

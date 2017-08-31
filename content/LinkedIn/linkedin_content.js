@@ -36,6 +36,7 @@ function linkedInGraber() {
 
                 if (wraper !== undefined) {
                     fetchNSData(text, 'default', addInformation(wraper));
+                    trackOrigin('LinkedIn');
                 }
             }
         }

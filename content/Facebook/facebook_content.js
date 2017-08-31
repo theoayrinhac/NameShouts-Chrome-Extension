@@ -38,8 +38,9 @@ function linkedInGraber() {
                 var wraper = linkedInDisplayer();
 
                 if (wraper !== undefined) {
-                    console.log("adding icon");
+                    trackOrigin('Facebook');
                     fetchNSData(text, 'default', addInformation(wraper));
+
                 }
             }
         }
@@ -58,7 +59,6 @@ function linkedInDisplayer() {
     wraper.classList = "NS Wraper";
 
     var div = $('#fb-timeline-cover-name').parent().parent();
-    console.log(div);
     $(wraper).insertAfter(div);
     div.parent().css("display", "flex");
 

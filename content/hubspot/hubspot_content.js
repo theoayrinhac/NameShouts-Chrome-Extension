@@ -13,7 +13,6 @@ function hubspotGraber() {
             if (names[i].hasAttribute("data-onboarding") && names[i].attributes["data-onboarding"].value === "contact-profile-module-title") {
 
                 if (oldname !== names[i].innerText) {
-                    console.log(names[i].innerText + " vs " + oldname);
                     oldname = names[i].innerText;
                     if (($('#NSWraper').length)) {
                         $('#NSWraper').remove();
@@ -38,6 +37,7 @@ function hubspotGraber() {
 
                     if (wraper !== undefined) {
                         fetchNSData(name, 'default', addInformation(wraper));
+                        trackOrigin('HubSpot');
                     }
                 }
             }

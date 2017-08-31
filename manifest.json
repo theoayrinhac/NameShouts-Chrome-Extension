@@ -2,7 +2,7 @@
   "manifest_version": 2,
 
   "name": "NameShouts Chrome Extension",
-  "description": "NameShouts is the easiest tool to learn proper pronunciation of names, just a click away ! Currently supported on Hubspot, LinkedIn, Facebook and AngelList.",
+  "description": "NameShouts is the easiest tool to learn proper pronunciation of names, just a click away!",
   "version": "1.0.2",
   "icons": {
     "128": "img/icon.png"
@@ -15,37 +15,39 @@
   "content_scripts": [
     {
       "matches": ["https://app.hubspot.com/*"],
-      "js": ["content/jquery.js", "content/content.js", "content/hubspot/hubspot_content.js"],
+      "js": ["content/config.js", "content/jquery.js", "content/content.js", "content/hubspot/hubspot_content.js"],
       "css": ["content/vocalizer_style.css", "content/balloon.css"]
     },
     {
       "matches": ["https://www.linkedin.com/*"],
-      "js": ["content/jquery.js", "content/content.js", "content/LinkedIn/linkedin_content.js"],
+      "js": ["content/config.js", "content/jquery.js", "content/content.js", "content/LinkedIn/linkedin_content.js"],
       "css": ["content/LinkedIn/linkedin_style.css", "content/balloon.css"]
     },
     {
       "matches": ["https://angel.co/*"],
-      "js": ["content/jquery.js", "content/content.js", "content/AngelList/angellist_content.js"],
+      "js": ["content/config.js", "content/jquery.js", "content/content.js", "content/AngelList/angellist_content.js"],
       "css": ["content/AngelList/angellist_style.css", "content/balloon.css"]
     },
     {
       "matches": ["https://www.facebook.com/*"],
-      "js": ["content/jquery.js", "content/content.js", "content/Facebook/facebook_content.js"],
+      "js": ["content/config.js", "content/jquery.js", "content/content.js", "content/Facebook/facebook_content.js"],
       "css": ["content/Facebook/facebook_style.css", "content/balloon.css"]
     },
     {
       "matches": ["https://www.nameshouts.com/developer/*"],
-      "js": ["content/jquery.js", "content/notify.min.js", "content/nameshouts/nameshouts.js"],
+      "js": ["content/config.js", "content/jquery.js", "content/notify.min.js", "content/nameshouts/nameshouts.js"],
       "css": ["content/nameshouts/nameshouts_stylesheet.css"]
     }
   ],
   "background": {
-    "scripts": ["background/background.js", "content/jquery.js"]
+    "scripts": ["content/jquery.js", "config.js", "background/background.js"]
   },
   "permissions": [
     "activeTab",
     "https://ajax.googleapis.com/",
+    "https://www.google-analytics.com/",
     "storage"
   ],
-  "web_accessible_resources": ["img/NSEar.svg", "img/NSInformation.svg", "img/NSPlayButton.svg", "img/NSCross.svg", "img/NSGreyEar.svg", "img/NSGreyEarButton.svg", "img/NSGreyInformation.svg"]
+  "web_accessible_resources": ["img/NSEar.svg", "img/NSInformation.svg", "img/NSPlayButton.svg", "img/NSCross.svg", "img/NSGreyEar.svg", "img/NSGreyEarButton.svg", "img/NSGreyInformation.svg"],
+  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'"
 }
