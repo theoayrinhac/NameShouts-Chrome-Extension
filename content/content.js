@@ -63,6 +63,7 @@ function fetchNSData(name, language, cb) {
 
 
 function createAudioList(audioPath) {
+
     var audioList = audioPath.map(function(el) {
         var audio = new Audio(el);
         audio.playbackRate = 0.9;
@@ -121,8 +122,6 @@ function parseInformation(el, names, sounds, langAvail) {
     var data = {};
     var complete = false;
 
-    console.log(sounds);
-
     for (var k = 0; k < langAvail.length; k++) {
         for (var i = 0; i < langAvail[k].length; i++) {
             var information = {};
@@ -160,11 +159,9 @@ function parseInformation(el, names, sounds, langAvail) {
             information["completeness"] = j;
             information["pattern"] = pattern;
             data[langAvail[k][i]] = information;
+
         }
     }
-
-    console.log(data);
-    console.log(langAvail);
 
     createNSIcon(el, data, langAvail, complete);
 }
@@ -253,8 +250,6 @@ function createNSIcon(wraper, data, langAvail, complete) {
         i--
     }
 
-    console.log(lang);
-
     var html = '<div class="NS Button">';
     html += '<div class="NS PlayButton NSSoundPlay" data-balloon="Hear Pronounciation" data-balloon-pos="up">';
     html += '<object data="' + NSPlayButtonURL + '" type="image/svg+xml"></object>';
@@ -285,7 +280,6 @@ function createNSIcon(wraper, data, langAvail, complete) {
     html += '<p class="NS Languages">';
     html += '<b>Language available:&nbsp</b>';
 
-    console.log(langAvail);
     if (langAvail.length === 1) {
         html += langAvail[langAvail.length - 1][0];
     } else {
@@ -329,7 +323,7 @@ function createNSIcon(wraper, data, langAvail, complete) {
     $('.NS.ContextualInformation').hide();
 
     $('.NSSoundPlay').on("click", function() {
-        playAudioList(createAudioList(data[langAvail[0]].audioPath));
+        playAudioList(createAudioList(data[lang].audioPath));
     });
 
     $('.NS.Information').click(function() {
