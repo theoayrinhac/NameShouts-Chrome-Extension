@@ -71,4 +71,11 @@ function linkedInModificationHandler() {
     });
 }
 
-linkedInGraber();
+chrome.storage.sync.get("SupportedWebsites", function(element) {
+    if (element.hasOwnProperty("SupportedWebsites")) {
+        config.supportedwebsites = element["SupportedWebsites"];
+        if (config.supportedwebsites["linkedin"]) {
+            linkedInGraber();
+        }
+    }
+});

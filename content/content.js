@@ -10,6 +10,9 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
         if(key === "APIKey") {
             config.nameshouts.token = chrome.storage.sync.get("APIKey");
         }
+        if (key === "SupportedWebsites") {
+            config.supportedwebsites = chrome.storage.sync.get("SupportedWebsites");
+        }
     }
 });
 
@@ -97,8 +100,8 @@ function parseLanguages(el, names, sounds) {
         }
     }
 
-    if (languages.length === 0) {
-        createErrorNSIcon(el, "Name not found", "This name doesn't exist in our database yet", "<p>Please feel free to send a request for this ame on our website</p>")
+    if (jQuery.isEmptyObject(languages)) {
+        createErrorNSIcon(el, "Name not found", "This name doesn't exist in our database yet", "<p>Please feel free to send a request for this name on our website</p>")
         return
     }
 
@@ -129,6 +132,7 @@ function parseInformation(el, names, sounds, langAvail) {
             var audioPath = [];
             var name = "";
             var pattern = [];
+            var gender = "both";
 
             for (var j = 0; j < names.length; j++) {
                 var relPath = "";
@@ -142,7 +146,12 @@ function parseInformation(el, names, sounds, langAvail) {
                             relPath = sounds[names[j]][l]["path"];
                             name += sounds[names[j]][l].name + " ";
                             pattern[j] = true;
+
                             break;
+                        }
+
+                        if (j === 0) {
+                            gender = sounds[names[j]][l].gender;
                         }
 
                         if (!complete && k === names.length - 1) {
@@ -158,6 +167,7 @@ function parseInformation(el, names, sounds, langAvail) {
             information["name"] = name;
             information["completeness"] = j;
             information["pattern"] = pattern;
+            information["gender"] = gender;
             data[langAvail[k][i]] = information;
 
         }
@@ -194,7 +204,7 @@ function createErrorNSIcon(wraper, context, title, text) {
     html += text;
     html += '</div>';
     html += '<p class="NS Footer">';
-    html += 'Powered by &nbsp<a id="NSLink" href="https://www.nameshouts.com">  NameShouts</a>';
+    html += 'Powered by &nbsp<a id="NSLink" href="https://www.nameshouts.com">NameShouts</a>';
     html += '</p>';
     html += '</div>';
 
@@ -234,11 +244,6 @@ function createErrorNSIcon(wraper, context, title, text) {
 
 function createNSIcon(wraper, data, langAvail, complete) {
 
-    var NSPlayButtonURL = chrome.extension.getURL("img/NSPlayButton.svg");
-    var NSInformationButtonURL = chrome.extension.getURL("img/NSInformation.svg");
-    var NSEarIconURL = chrome.extension.getURL("img/NSEar.svg");
-    var NSCrossURL = chrome.extension.getURL("img/NSCross.svg");
-
     var lang = undefined;
     var i = langAvail.length - 1;
 
@@ -249,6 +254,22 @@ function createNSIcon(wraper, data, langAvail, complete) {
         }
         i--
     }
+
+    var NSPlayButtonURL = chrome.extension.getURL("img/NSPlayButton.svg");
+    var NSInformationButtonURL = chrome.extension.getURL("img/NSInformation.svg");
+    var NSEarIconURL = chrome.extension.getURL("img/NSEar.svg");
+    var NSCrossURL = chrome.extension.getURL("img/NSCross.svg");
+    if (data[lang].gender === "male") {
+        var NSGenderIconURL = chrome.extension.getURL("img/NSMaleIcon.svg");
+    }
+    else if (data[lang].gender === "female") {
+        var NSGenderIconURL = chrome.extension.getURL("img/NSFemaleIcon.svg");
+    }
+    else {
+        var NSGenderIconURL = false;
+    }
+
+    console.log(NSGenderIconURL);
 
     var html = '<div class="NS Button">';
     html += '<div class="NS PlayButton NSSoundPlay" data-balloon="Hear Pronounciation" data-balloon-pos="up">';
@@ -275,6 +296,13 @@ function createNSIcon(wraper, data, langAvail, complete) {
     html += '<p class="NS Pronounciation">';
     html += '<i id="NSPhonetic">' + data[lang].phonetic + '</i>';
     html += '</p>';
+
+    if (NSGenderIconURL) {
+        html += '<div class="NS IconWraper Gender" data-balloon="Typically a ' + data[lang].gender + ' name" data-balloon-pos="up">';
+        html += '<object id="NSGender" data="' + NSGenderIconURL + '" type="image/svg+xml"></object>';
+        html += '</div>';
+    }
+
     html += '</div>';
     html += '</div>';
     html += '<p class="NS Languages">';
@@ -360,10 +388,13 @@ function createLangChangeFct(data) {
     return function (lang) {
         $('#NSName').text(data[lang].name);
         $('#NSPhonetic').text(data[lang].phonetic);
+        $('NSGender')
+
         $('.NSSoundPlay').off("click");
         $('.NSSoundPlay').on("click", function() {
             playAudioList(createAudioList(data[lang].audioPath));
         });
+
     }
 }
 

@@ -124,6 +124,12 @@ p.NS.Footer {
 	margin-top: 1.5em;
 }
 
+.NS.IconWraper.Gender{
+	height: 1em;
+	width: 1em;
+	margin-top: 0.1em;
+}
+
 .NS.Wraper:not(.Bigger):not(.Grey):hover {
 	-webkit-animation: button-get-bigger .3s linear 1;
 	-moz-animation: button-get-bigger .3s linear 1;

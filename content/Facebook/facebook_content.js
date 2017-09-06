@@ -7,7 +7,7 @@ console.log('loaded');
 var faceboookNameAdded = false;
 var name = "";
 
-function linkedInGraber() {
+function facebookGraber() {
     document.addEventListener("DOMSubtreeModified", function(event){
         var element = $('#fb-timeline-cover-name');
 
@@ -35,7 +35,7 @@ function linkedInGraber() {
 
                 faceboookNameAdded = true;
 
-                var wraper = linkedInDisplayer();
+                var wraper = facebookDisplayer();
 
                 if (wraper !== undefined) {
                     trackOrigin('Facebook');
@@ -47,13 +47,13 @@ function linkedInGraber() {
     });
 }
 
-function linkedInDisplayer() {
+function facebookDisplayer() {
 
     if (($('#NSWraper').length)) {
         $('#NSWraper').remove();
     }
 
-    linkedInModificationHandler();
+    facebookModificationHandler();
     var wraper = document.createElement('div');
     wraper.id = "NSWraper";
     wraper.classList = "NS Wraper";
@@ -69,10 +69,18 @@ function linkedInDisplayer() {
     return wraper;
 }
 
-function linkedInModificationHandler() {
+function facebookModificationHandler() {
     window.addEventListener('popstate', function (event) {
         faceboookNameAdded = false;
     });
 }
 
-linkedInGraber();
+
+chrome.storage.sync.get("SupportedWebsites", function(element) {
+    if (element.hasOwnProperty("SupportedWebsites")) {
+        config.supportedwebsites = element["SupportedWebsites"];
+        if (config.supportedwebsites["facebook"]) {
+            facebookGraber();
+        }
+    }
+});

@@ -52,7 +52,12 @@ function angelDisplayer(el) {
     }
 }
 
+chrome.storage.sync.get("SupportedWebsites", function(element) {
+    if (element.hasOwnProperty("SupportedWebsites")) {
+        config.supportedwebsites = element["SupportedWebsites"];
+        if (config.supportedwebsites["angellist"]) {
+            angelGraber();
+        }
+    }
+});
 
-
-
-angelGraber();

@@ -66,6 +66,12 @@
 	text-align: left !important;
 }
 
+.NS.IconWraper.Gender{
+	height: 1em;
+	width: 1em;
+	margin-top: 0.1em;
+}
+
 .NS.IconWraper {
 	margin-left: 0.5em;
 }
