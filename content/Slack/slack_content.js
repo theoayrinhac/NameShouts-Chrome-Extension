@@ -8,37 +8,34 @@ var name = "";
 
 function slackGraber() {
     document.addEventListener("DOMSubtreeModified", function(event){
-        if ($('.panel.active').length) {
-            if ($('.member_name_and_presence').length) {
+        if ($(".panel.active .member_name_and_presence").length) {
+            var text = $(".panel.active .member_name_and_presence .member_name").text();
+            if (text === "") {
+                return;
+            }
 
-                var text = $('.member_name').text();
-                if (text === "") {
-                    return;
-                }
+            if (name !== text) {
+                name = text;
+                slackNameAdded = false;
+            }
 
-                if (name !== text) {
-                    name = text;
-                    slackNameAdded = false;
-                }
+            if (!slackNameAdded || name !== text) {
 
-                if (!slackNameAdded || name !== text) {
+                name = text;
 
-                    name = text;
+                text = removeDiacritics(text);
+                text = text.replace(/-/g, '_');
+                text = text.replace(/ /g, '_');
+                text = text.replace(/\W/g, '');
+                text = text.replace(/_/g, '-');
 
-                    text = removeDiacritics(text);
-                    text = text.replace(/-/g, '_');
-                    text = text.replace(/ /g, '_');
-                    text = text.replace(/\W/g,'');
-                    text = text.replace(/_/g, '-');
+                slackNameAdded = true;
 
-                    slackNameAdded = true;
+                var wraper = slackDisplayer();
 
-                    var wraper = slackDisplayer();
-
-                    if (wraper !== undefined) {
-                        fetchNSData(text, 'default', addInformation(wraper));
-                        trackOrigin('LinkedIn');
-                    }
+                if (wraper !== undefined) {
+                    fetchNSData(text, 'default', addInformation(wraper));
+                    trackOrigin('Slack');
                 }
             }
         }
