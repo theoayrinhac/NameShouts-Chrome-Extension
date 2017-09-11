@@ -3,7 +3,7 @@
 
   "name": "NameShouts Chrome Extension",
   "description": "NameShouts is the easiest tool to learn proper pronunciation of names, just a click away!",
-  "version": "1.0.41",
+  "version": "1.0.45",
   "icons": {
     "128": "img/icon.png"
   },
@@ -53,6 +53,6 @@
     "https://www.google-analytics.com/",
     "storage"
   ],
-  "web_accessible_resources": ["img/NSEar.svg", "img/NSInformation.svg", "img/NSPlayButton.svg", "img/NSCross.svg", "img/NSGreyEar.svg", "img/NSGreyEarButton.svg", "img/NSGreyInformation.svg", "img/NSFemaleIcon.svg", "img/NSMaleIcon.svg"],
+  "web_accessible_resources": ["img/*"],
   "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'"
 }

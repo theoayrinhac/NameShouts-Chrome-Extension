@@ -4,7 +4,7 @@
 
 body {
     width: 300px;
-    height: 200px;
+    height: 210px;
     position: relative;
 }
 
@@ -79,7 +79,54 @@ a {
     width: 100%;
     height: 100%;
     z-index: 10;
-    -webkit-filter: blur(5px);
-    -ms-filter: blur(5px);
-    filter: blur(5px);
+    -webkit-filter: blur(10px);
+    -ms-filter: blur(10px);
+    filter: blur(10px);
+}
+
+#settingsLink {
+    height: 15px;
+    width: 15px;
+    position: absolute;
+    right: 15px;
+    cursor: pointer;
+}
+
+#mainLink {
+    height: 15px;
+    width: 15px;
+    position: absolute;
+    left: 10px;
+    cursor: pointer;
+}
+
+.serviceIcon {
+    display:block;
+    margin:auto;
+    height: 40px;
+    width: 40px;
+}
+
+
+
+#websites {
+    display: flex;
+    width: 300px;
+}
+
+.websiteIcon {
+    margin: 5px;
+    cursor: pointer;
+}
+
+.websiteIcon p {
+    text-align: center;
+}
+
+#savesettings {
+    margin-top: -20px;
+    align-self: center;
+    justify-content: center;
+    width: 300px;
+    height: 2em;
 }

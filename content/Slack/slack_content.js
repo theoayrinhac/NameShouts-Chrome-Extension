@@ -64,14 +64,12 @@ function slackModificationHandler() {
     });
 }
 
-slackGraber();
-
-/*chrome.storage.sync.get("SupportedWebsites", function(element) {
+chrome.storage.sync.get("SupportedWebsites", function(element) {
     if (element.hasOwnProperty("SupportedWebsites")) {
         config.supportedwebsites = element["SupportedWebsites"];
         if (config.supportedwebsites["slack"]) {
  slackGraber();
         }
     }
-});*/
+});
 

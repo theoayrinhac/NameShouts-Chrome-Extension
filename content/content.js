@@ -162,12 +162,15 @@ function parseInformation(el, names, sounds, langAvail) {
                 }
             }
 
+
+
             information["phonetic"] = phonetic;
             information["audioPath"] = audioPath;
             information["name"] = name;
             information["completeness"] = j;
             information["pattern"] = pattern;
             information["gender"] = gender;
+
             data[langAvail[k][i]] = information;
 
         }
@@ -248,7 +251,6 @@ function createNSIcon(wraper, data, langAvail, complete) {
     var i = langAvail.length - 1;
 
     while (lang === undefined || i > 0) {
-        console.log(langAvail[i]);
         if (langAvail[i].length !== 0) {
             lang = langAvail[i][0];
         }
@@ -259,6 +261,7 @@ function createNSIcon(wraper, data, langAvail, complete) {
     var NSInformationButtonURL = chrome.extension.getURL("img/NSInformation.svg");
     var NSEarIconURL = chrome.extension.getURL("img/NSEar.svg");
     var NSCrossURL = chrome.extension.getURL("img/NSCross.svg");
+
     if (data[lang].gender === "male") {
         var NSGenderIconURL = chrome.extension.getURL("img/NSMaleIcon.svg");
     }
@@ -268,8 +271,6 @@ function createNSIcon(wraper, data, langAvail, complete) {
     else {
         var NSGenderIconURL = false;
     }
-
-    console.log(NSGenderIconURL);
 
     var html = '<div class="NS Button">';
     html += '<div class="NS PlayButton NSSoundPlay" data-balloon="Hear Pronounciation" data-balloon-pos="up">';
@@ -297,40 +298,34 @@ function createNSIcon(wraper, data, langAvail, complete) {
     html += '<i id="NSPhonetic">' + data[lang].phonetic + '</i>';
     html += '</p>';
 
-    if (NSGenderIconURL) {
-        html += '<div class="NS IconWraper Gender" data-balloon="Typically a ' + data[lang].gender + ' name" data-balloon-pos="up">';
-        html += '<object id="NSGender" data="' + NSGenderIconURL + '" type="image/svg+xml"></object>';
-        html += '</div>';
-    }
+    html += '<div id="NSGender" class="NS IconWraper Gender" data-balloon="Typically a ' + data[lang].gender + ' name" data-balloon-pos="up">';
+    html += '<object id="NSGenderIcon" data="#" type="image/svg+xml"></object>';
+    html += '</div>';
 
     html += '</div>';
     html += '</div>';
     html += '<p class="NS Languages">';
     html += '<b>Language available:&nbsp</b>';
 
-    if (langAvail.length === 1) {
-        html += langAvail[langAvail.length - 1][0];
-    } else {
-        html += '<select id="NSLangSelect">';
-        if (complete) {
-            for (var j = 0; j < langAvail[langAvail.length - 1].length; j++) {
-                html += '<option value="' + langAvail[langAvail.length - 1][j] + '">' + langAvail[langAvail.length - 1][j] + '</option>';
-            }
+    html += '<select id="NSLangSelect">';
+    if (complete) {
+        for (var j = 0; j < langAvail[langAvail.length - 1].length; j++) {
+            html += '<option value="' + langAvail[langAvail.length - 1][j] + '">' + langAvail[langAvail.length - 1][j] + '</option>';
         }
-        else {
-            for (var i = (langAvail.length - 1); i >= 0; i--) {
-                if (langAvail[i].length !== 0) {
-                    html += '<optgroup label="' + (i + 1) + ' words">';
-                    for (var j = 0; j < langAvail[i].length; j++) {
-                        html += '<option value="' + langAvail[i][j] + '">' + langAvail[i][j] + '</option>';
-                    }
-                    html += '</optgroup>';
-                }
-            }
-        }
-        html += '</select>';
-
     }
+    else {
+        for (var i = (langAvail.length - 1); i >= 0; i--) {
+            if (langAvail[i].length !== 0) {
+                html += '<optgroup label="' + (i + 1) + ' words">';
+                for (var j = 0; j < langAvail[i].length; j++) {
+                    html += '<option value="' + langAvail[i][j] + '">' + langAvail[i][j] + '</option>';
+                }
+                html += '</optgroup>';
+            }
+        }
+    }
+    html += '</select>';
+
 
     html += '</p>';
     html += '<p class="NS Footer">';
@@ -341,12 +336,14 @@ function createNSIcon(wraper, data, langAvail, complete) {
 
     wraper.innerHTML = html;
 
-    if (langAvail.length !== 1) {
-        document.getElementById('NSLangSelect').onchange = function () {
+    if (!NSGenderIconURL) {
+        $('#NSGender').hide()
+    }
+
+    document.getElementById('NSLangSelect').onchange = function () {
             var lang = this.value;
             createLangChangeFct(data)(lang);
         }
-    }
 
     $('.NS.ContextualInformation').hide();
 
@@ -388,7 +385,24 @@ function createLangChangeFct(data) {
     return function (lang) {
         $('#NSName').text(data[lang].name);
         $('#NSPhonetic').text(data[lang].phonetic);
-        $('NSGender')
+
+        if (data[lang].gender === "male") {
+            var NSGenderIconURL = chrome.extension.getURL("img/NSMaleIcon.svg");
+        }
+        else if (data[lang].gender === "female") {
+            var NSGenderIconURL = chrome.extension.getURL("img/NSFemaleIcon.svg");
+        }
+        else {
+            var NSGenderIconURL = false;
+        }
+
+        if (NSGenderIconURL) {
+            $('#NSGenderIcon').attr("data", NSGenderIconURL);
+            $('#NSGender').show()
+        }
+        else {
+            $('#NSGender').hide()
+        }
 
         $('.NSSoundPlay').off("click");
         $('.NSSoundPlay').on("click", function() {

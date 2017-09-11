@@ -15,7 +15,7 @@
         <div class="forblur">
             <div class="header">
                 <a target="_blank" href="https://www.nameshouts.com/"><img src="../img/NSLogo.svg" alt="NameShouts" id="nslogo"></a>
-                <p id="settingsLink">settings</p>
+                <img src="../img/Gear.svg" alt="Settings" id="settingsLink">
             </div>
 
             <div id="first-usage">
@@ -37,21 +37,19 @@
     </div>
     <div id="settings" style="display: none;">
         <div class="success" style="display: none">
-            <h2 style="text-align: center">Your API Key was successfully updated</h2>
+            <h2 style="text-align: center">Settings successfully saved</h2>
         </div>
-        <div id="forblur">
+        <div class="forblur">
             <div class="header">
-                <p id="mainLink">back</p>
+                <img src="../img/Back.svg" alt="Settings" id="mainLink">
                 <a target="_blank" href="https://www.nameshouts.com/"><img src="../img/NSLogo.svg" alt="NameShouts" id="nslogo"></a>
             </div>
 
             <h3>Supported websites:</h3>
-            <input type="checkbox" id="hubspot-selector" checked> Use on HubSpot<br>
-            <input type="checkbox" id="linkedin-selector" checked> Use on LinkedIn<br>
-            <input type="checkbox" id="facebook-selector" checked> Use on Facebook<br>
-            <input type="checkbox" id="angellist-selector" checked> Use on AngelList<br>
+            <div id="websites">
+            </div>
 
-            <button id="savesettings">save</button>
+            <button id="savesettings">Save</button>
             <script type="text/javascript" src="popup.js"></script>
         </div>
     </div>
