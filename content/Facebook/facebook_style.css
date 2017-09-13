@@ -40,9 +40,9 @@
 
 .NS.Wraper .NS.ContextualInformation {
 	z-index: 100;
-	min-width: 220px;
+	min-width: 250px;
     max-width: 300px;
-	min-height: 75px;
+	min-height: 110px;
 	position: absolute;
 	background: #fafafa;
 	padding: 10px;

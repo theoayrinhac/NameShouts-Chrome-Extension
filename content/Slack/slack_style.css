@@ -38,15 +38,15 @@
 
 .NS.Wraper .NS.ContextualInformation {
 	z-index: 100;
-	min-width: 250px;
+	min-width: 300px;
     max-width: 300px;
-	min-height: 180px;
+	min-height: 150px;
 	position: absolute;
 	background: #fafafa;
 	padding: 10px;
 	border-radius: 3px;
 	top: 150%;
-	left: -60%;
+	left: -150%;
 	box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
 	display: flex;
 	flex-direction: column;
@@ -184,6 +184,14 @@ p.NS.Footer {
 	font-size: 1.2em;
 	line-height: 1em;
 	margin: 0;
+}
+
+.NS b {
+	font-size: 0.6em;
+}
+
+.dropdown {
+	margin-left: 0.2em;
 }
 
 @-webkit-keyframes information-get-bigger {

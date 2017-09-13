@@ -5,6 +5,8 @@ var config = {
     }
 };
 
+var selectedLanguage = undefined;
+
 chrome.storage.onChanged.addListener(function(changes, namespace) {
     for (key in changes) {
         if(key === "APIKey") {
@@ -250,9 +252,10 @@ function createNSIcon(wraper, data, langAvail, complete) {
     var lang = undefined;
     var i = langAvail.length - 1;
 
-    while (lang === undefined || i > 0) {
+    while (i >= 0) {
         if (langAvail[i].length !== 0) {
             lang = langAvail[i][0];
+            break;
         }
         i--
     }
@@ -299,35 +302,21 @@ function createNSIcon(wraper, data, langAvail, complete) {
     html += '</p>';
 
     html += '<div id="NSGender" class="NS IconWraper Gender" data-balloon="Typically a ' + data[lang].gender + ' name" data-balloon-pos="up">';
-    html += '<object id="NSGenderIcon" data="#" type="image/svg+xml"></object>';
+    html += '<object id="NSGenderIcon" data="' + NSGenderIconURL + '" type="image/svg+xml"></object>';
     html += '</div>';
 
     html += '</div>';
     html += '</div>';
-    html += '<p class="NS Languages">';
-    html += '<b>Language available:&nbsp</b>';
+    html += '<div class="NS Languages">';
+    html += '<b>Language selected:&nbsp</b>';
 
-    html += '<select id="NSLangSelect">';
-    if (complete) {
-        for (var j = 0; j < langAvail[langAvail.length - 1].length; j++) {
-            html += '<option value="' + langAvail[langAvail.length - 1][j] + '">' + langAvail[langAvail.length - 1][j] + '</option>';
-        }
-    }
-    else {
-        for (var i = (langAvail.length - 1); i >= 0; i--) {
-            if (langAvail[i].length !== 0) {
-                html += '<optgroup label="' + (i + 1) + ' words">';
-                for (var j = 0; j < langAvail[i].length; j++) {
-                    html += '<option value="' + langAvail[i][j] + '">' + langAvail[i][j] + '</option>';
-                }
-                html += '</optgroup>';
-            }
-        }
-    }
-    html += '</select>';
+    html += '<div class="dropdown">';
+    html += '<button id="dropdownlanguage" class="dropbtn">' + lang + '</button>';
+    html += '<div id="nsdropdown" class="dropdown-content">';
+    html += '</div>';
+    html += '</div>';
 
-
-    html += '</p>';
+    html += '</div>';
     html += '<p class="NS Footer">';
     html += 'Powered by &nbsp<a id="NSLink" href="https://www.nameshouts.com">  NameShouts</a>';
     html += '</p>';
@@ -340,10 +329,46 @@ function createNSIcon(wraper, data, langAvail, complete) {
         $('#NSGender').hide()
     }
 
-    document.getElementById('NSLangSelect').onchange = function () {
+    for (var i = (langAvail.length - 1); i >= 0; i--) {
+        if (langAvail[i].length !== 0) {
+            for (var j = 0; j < langAvail[i].length; j++) {
+                var pattern = data[langAvail[i][j]].pattern;
+                var string = "";
+                for (var k = 0; k < pattern.length; k++) {
+                    if (pattern[k]) {
+                        string += "<e>●</e>";
+                    } else {
+                        string += "●";
+                    }
+                }
+
+                var option = document.createElement('p');
+                option.innerHTML = langAvail[i][j] + '<span class="NSCompleteness"">' + string + '</span>';
+
+                $('#nsdropdown').append(option);
+
+                if (langAvail[i][j] === lang) {
+                    $(option).hide();
+                    selectedLanguage = option;
+                }
+
+                var changingfct = createLangChangeFct(data, langAvail[i][j], option);
+
+                $(option).click(changingfct);
+            }
+        }
+        if (complete) {
+            if (langAvail[i].length === 1) {
+                $('.dropbtn').addClass('default');
+            }
+            break;
+        }
+    }
+
+    /*document.getElementById('NSLangSelect').onchange = function () {
             var lang = this.value;
             createLangChangeFct(data)(lang);
-        }
+        }*/
 
     $('.NS.ContextualInformation').hide();
 
@@ -381,8 +406,8 @@ function createNSIcon(wraper, data, langAvail, complete) {
     $(wraper).show();
 }
 
-function createLangChangeFct(data) {
-    return function (lang) {
+function createLangChangeFct(data, lang, element) {
+    return function () {
         $('#NSName').text(data[lang].name);
         $('#NSPhonetic').text(data[lang].phonetic);
 
@@ -409,6 +434,13 @@ function createLangChangeFct(data) {
             playAudioList(createAudioList(data[lang].audioPath));
         });
 
+        console.log($('#dropdownlanguage'));
+
+        $('#dropdownlanguage')[0].innerText = lang;
+
+        $(selectedLanguage).show();
+        $(element).hide();
+        selectedLanguage = element;
     }
 }
 

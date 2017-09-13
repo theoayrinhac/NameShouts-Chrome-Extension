@@ -3,7 +3,7 @@
 
   "name": "NameShouts Chrome Extension",
   "description": "NameShouts is the easiest tool to learn proper pronunciation of names, just a click away!",
-  "version": "1.0.45",
+  "version": "1.0.50",
   "icons": {
     "128": "img/icon.png"
   },
@@ -16,32 +16,32 @@
     {
       "matches": ["https://app.hubspot.com/*"],
       "js": ["content/jquery.js", "content/content.js", "content/hubspot/hubspot_content.js"],
-      "css": ["content/vocalizer_style.css", "content/balloon.css"]
+      "css": ["content/general_style.css", "content/Hubspot/hubspot_style.css", "content/balloon.css"]
     },
     {
       "matches": ["https://www.linkedin.com/*"],
       "js": ["content/jquery.js", "content/content.js", "content/LinkedIn/linkedin_content.js"],
-      "css": ["content/LinkedIn/linkedin_style.css", "content/balloon.css"]
+      "css": ["content/general_style.css", "content/LinkedIn/linkedin_style.css", "content/balloon.css"]
     },
     {
       "matches": ["https://angel.co/*"],
       "js": ["content/jquery.js", "content/content.js", "content/AngelList/angellist_content.js"],
-      "css": ["content/AngelList/angellist_style.css", "content/balloon.css"]
+      "css": ["content/general_style.css", "content/AngelList/angellist_style.css", "content/balloon.css"]
     },
     {
       "matches": ["https://www.facebook.com/*"],
       "js": ["content/jquery.js", "content/content.js", "content/Facebook/facebook_content.js"],
-      "css": ["content/Facebook/facebook_style.css", "content/balloon.css"]
+      "css": ["content/general_style.css", "content/Facebook/facebook_style.css", "content/balloon.css"]
     },
     {
       "matches": ["https://nameshouts.slack.com/*"],
       "js": ["content/jquery.js", "content/content.js", "content/Slack/slack_content.js"],
-      "css": ["content/Slack/slack_style.css", "content/balloon.css"]
+      "css": ["content/general_style.css", "content/Slack/slack_style.css", "content/balloon.css"]
     },
     {
       "matches": ["https://www.nameshouts.com/developer/*"],
       "js": ["content/jquery.js", "content/notify.min.js", "content/nameshouts/nameshouts.js"],
-      "css": ["content/nameshouts/nameshouts_stylesheet.css"]
+      "css": ["content/general_style.css", "content/nameshouts/nameshouts_stylesheet.css"]
     }
   ],
   "background": {

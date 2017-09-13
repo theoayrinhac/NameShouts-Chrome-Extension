@@ -38,8 +38,8 @@
 
 .NS.Wraper .NS.ContextualInformation {
 	z-index: 100;
-	min-width: 300px;
-    max-width: 350px;
+	min-width: 350px;
+    max-width: 400px;
 	min-height: 150px;
 	position: absolute;
 	background: #fafafa;
@@ -187,6 +187,10 @@ p.NS.Footer {
 .NS p {
 	font-size: 0.75em;
 	line-height: 0.8em;
+}
+
+.NS b {
+	font-size: 0.8em;
 }
 
 @-webkit-keyframes information-get-bigger {

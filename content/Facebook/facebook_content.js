@@ -71,7 +71,14 @@ function facebookDisplayer() {
 
 function facebookModificationHandler() {
     window.addEventListener('popstate', function (event) {
-        faceboookNameAdded = false;
+        chrome.storage.sync.get("SupportedWebsites", function(element) {
+            if (element.hasOwnProperty("SupportedWebsites")) {
+                config.supportedwebsites = element["SupportedWebsites"];
+                if (config.supportedwebsites["facebook"]) {
+                    faceboookNameAdded = false;
+                }
+            }
+        });
     });
 }
 

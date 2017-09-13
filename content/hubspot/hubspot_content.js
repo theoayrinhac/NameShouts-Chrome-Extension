@@ -59,6 +59,8 @@ function hubspotDisplayer(el) {
             wraper.parentNode.removeChild(wraper);
         });
 
+        hubspotModificationHandler()
+
         return wraper
     }
 
@@ -73,3 +75,16 @@ chrome.storage.sync.get("SupportedWebsites", function(element) {
         }
     }
 });
+
+function hubspotModificationHandler() {
+    window.addEventListener('popstate', function (event) {
+        chrome.storage.sync.get("SupportedWebsites", function(element) {
+            if (element.hasOwnProperty("SupportedWebsites")) {
+                config.supportedwebsites = element["SupportedWebsites"];
+                if (config.supportedwebsites["hubspot"]) {
+                    hubspotNameAdded = false;
+                }
+            }
+        });
+    });
+}
