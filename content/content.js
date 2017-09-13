@@ -403,6 +403,8 @@ function createNSIcon(wraper, data, langAvail, complete) {
         return false;
     });
 
+    $('.dropdown').hover(function () {$('.dropdown-content').show()}, function () {$('.dropdown-content').hide()});
+
     $(wraper).show();
 }
 
@@ -434,9 +436,9 @@ function createLangChangeFct(data, lang, element) {
             playAudioList(createAudioList(data[lang].audioPath));
         });
 
-        console.log($('#dropdownlanguage'));
-
         $('#dropdownlanguage')[0].innerText = lang;
+
+        $('.dropdown-content').hide();
 
         $(selectedLanguage).show();
         $(element).hide();
