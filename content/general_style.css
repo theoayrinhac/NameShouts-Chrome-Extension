@@ -68,3 +68,7 @@ div.NS.Languages {
 .dropbtn.default {
     cursor: auto;
 }
+
+.NSNameGrey {
+    color: #a3a3a3;
+}

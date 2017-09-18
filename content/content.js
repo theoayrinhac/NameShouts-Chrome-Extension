@@ -139,6 +139,7 @@ function parseInformation(el, names, sounds, langAvail) {
             for (var j = 0; j < names.length; j++) {
                 var relPath = "";
                 pattern[j]=false;
+                var name_added = false;
 
                 if (sounds[names[j]] !== null) {
                     for (var l = 0; l < sounds[names[j]].length; l++) {
@@ -148,6 +149,7 @@ function parseInformation(el, names, sounds, langAvail) {
                             relPath = sounds[names[j]][l]["path"];
                             name += sounds[names[j]][l].name + " ";
                             pattern[j] = true;
+                            name_added = true;
 
                             break;
                         }
@@ -162,9 +164,13 @@ function parseInformation(el, names, sounds, langAvail) {
                     }
                     audioPath.push(config.nameshouts.mediaBase + relPath + '.mp3');
                 }
+                if (!name_added) {
+                    name += '<span class="NSNameGrey">' + names[j] + ' </span> ';
+                }
+
             }
 
-
+            console.log
 
             information["phonetic"] = phonetic;
             information["audioPath"] = audioPath;
@@ -202,7 +208,7 @@ function createErrorNSIcon(wraper, context, title, text) {
     html += '</div>';
     html += '<div class="NS Header">';
     html += '<h2 id="NSName" class="NS Name">';
-    html +=  title
+    html +=  title;
     html += '</h2>';
     html += '</div>';
     html += '<div class="NSBody">';
@@ -410,7 +416,7 @@ function createNSIcon(wraper, data, langAvail, complete) {
 
 function createLangChangeFct(data, lang, element) {
     return function () {
-        $('#NSName').text(data[lang].name);
+        $('#NSName').html(data[lang].name);
         $('#NSPhonetic').text(data[lang].phonetic);
 
         if (data[lang].gender === "male") {
